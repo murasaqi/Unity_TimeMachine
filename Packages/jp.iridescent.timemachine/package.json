@@ -1,0 +1,12 @@
+{
+    "author": "Murasaqi",
+    "description": "Timeline runtime controller",
+    "displayName": "TimeMachine",
+    "keywords": [ "unity" ],
+    "license": "Unlicense",
+    "name": "jp.iridescent.timemachine",
+    "repository": "github:murasaqi/Unity_TimeMachine",
+    "unity": "2021.2",
+    "unityRelease": "0f1",
+    "version": "1.0.4"
+  }
