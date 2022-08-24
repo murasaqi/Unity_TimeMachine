@@ -17,7 +17,7 @@ MonoBehaviour:
   sectionName: MC-01
   mute: 0
   timeMachineClipEvent: 0
-  isFinishRole: 1
+  isFinishRole: 0
   clipIndex: 2
 --- !u!114 &-3351289766563320883
 MonoBehaviour:
@@ -282,8 +282,8 @@ MonoBehaviour:
     timeMachineClipEvent: 0
   sectionName: M-02
   mute: 0
-  timeMachineClipEvent: 2
-  isFinishRole: 1
+  timeMachineClipEvent: 0
+  isFinishRole: 0
   clipIndex: 1
 --- !u!114 &7699152800386079774
 MonoBehaviour:
@@ -301,6 +301,6 @@ MonoBehaviour:
     timeMachineClipEvent: 0
   sectionName: REST
   mute: 0
-  timeMachineClipEvent: 2
-  isFinishRole: 1
+  timeMachineClipEvent: 1
+  isFinishRole: 0
   clipIndex: 3

@@ -12,12 +12,18 @@ namespace Iridescent.TimeMachine
         internal PlayableDirector playableDirector;
         private List<TimeMachineControlBehaviour> inputs = new List<TimeMachineControlBehaviour>();
         
-        public int GetCurrentInputIndex => currentInputIndex;
-        private TimeMachineControlBehaviour currentInput = null;
+      
+       
         public bool initialized = false;
         private TimeMachineTrackManager trackBinding = null;
+        private TimeMachineControlBehaviour currentInput = null;
+        // private TimeMachineControlClip currentClip = null;
+        private TimelineClip currentTimelineClip = null;
         private int currentInputIndex = 0;
-
+        public int GetCurrentInputIndex => currentInputIndex;
+        // public TimeMachineControlClip GetCurrentClip => currentClip;
+        public TimelineClip GetCurrentTimelineClip => currentTimelineClip;
+        public TimeMachineTrackManager timeMachineTrackManager => trackBinding;
 
         public override void OnPlayableCreate(Playable playable)
         {
@@ -69,6 +75,8 @@ namespace Iridescent.TimeMachine
                 {
                     // Debug.Log($"{clip.displayName}, {input.isFinishRole}");
                     currentInput = input;
+                    // currentClip = timeMachineControlClip;
+                    currentTimelineClip = clip;
                     currentInputIndex = i;
                     trackBinding.currentClipCount = currentInputIndex;
                     //  ======================= SKIP ========================= //
@@ -122,7 +130,6 @@ namespace Iridescent.TimeMachine
             {
                 var timeMachineClip = clip.asset as TimeMachineControlClip;
                 timeMachineClip.isFinishRole = false;
-                // var c = clip as TimeMachineControlClip;
             }
 
         }
