@@ -53,7 +53,7 @@ namespace Iridescent.TimeMachine
             var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
             if (timeMachineControlClip == null)
                 return;
-            clip.displayName = $"#{timeMachineControlClip.clipIndex} {timeMachineControlClip.name}";
+            clip.displayName = $"#{timeMachineControlClip.clipIndex} {timeMachineControlClip.sectionName}";
 
 
         }
@@ -110,7 +110,7 @@ namespace Iridescent.TimeMachine
                 icon, ScaleMode.ScaleAndCrop,
                 true,
                 0,
-                timelineClip.isFinishRole ? new Color(1,1,1,0.5f):new Color(color.r,color.g,color.b, alpha), 0, 0);
+                new Color(color.r,color.g,color.b, alpha), 0, 0);
             
             GUI.DrawTexture(tallyPosition,
                 dotTexture, ScaleMode.ScaleAndCrop,
