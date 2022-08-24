@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+
+#if  UNITY_EDITOR
+
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Iridescent.TimeMachine
@@ -32,3 +32,5 @@ namespace Iridescent.TimeMachine
         }
     }    
 }
+
+#endif

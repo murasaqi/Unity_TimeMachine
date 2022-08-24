@@ -17,7 +17,7 @@ MonoBehaviour:
   sectionName: MC-01
   mute: 0
   timeMachineClipEvent: 0
-  isFinishRole: 0
+  isFinishRole: 1
   clipIndex: 2
 --- !u!114 &-3351289766563320883
 MonoBehaviour:
@@ -49,8 +49,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -3351289766563320883}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -82,8 +82,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -3351289766563320883}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -115,8 +115,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -3351289766563320883}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -148,8 +148,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -3351289766563320883}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -181,8 +181,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -3351289766563320883}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -282,8 +282,8 @@ MonoBehaviour:
     timeMachineClipEvent: 0
   sectionName: M-02
   mute: 0
-  timeMachineClipEvent: 0
-  isFinishRole: 0
+  timeMachineClipEvent: 2
+  isFinishRole: 1
   clipIndex: 1
 --- !u!114 &7699152800386079774
 MonoBehaviour:
@@ -301,6 +301,6 @@ MonoBehaviour:
     timeMachineClipEvent: 0
   sectionName: REST
   mute: 0
-  timeMachineClipEvent: 1
-  isFinishRole: 0
+  timeMachineClipEvent: 2
+  isFinishRole: 1
   clipIndex: 3
