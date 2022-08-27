@@ -18,7 +18,7 @@ namespace Iridescent.TimeMachine
     {
 
         [SerializeField] public TimeMachineTrackManager timeMachineTrackManager;
-        [SerializeField] public PlayableDirector timeline;
+        // [SerializeField] public PlayableDirector timeline;
         [SerializeField] public TextMeshProUGUI textMeshProUGUI;
         [SerializeField] public RectTransform clipButtonContainer;
         [SerializeField] public Color finishTextColor = Color.gray;
@@ -41,10 +41,10 @@ namespace Iridescent.TimeMachine
 
         public void InitTrack()
         {
-            if(timeline == null) return;
+            if(timeMachineTrackManager.playableDirector == null) return;
             if(timeMachineControlTrack == null)
             {
-                timelineAsset  = timeline.playableAsset as TimelineAsset;
+                timelineAsset  = timeMachineTrackManager.playableDirector.playableAsset as TimelineAsset;
                 foreach (var trackAsset in timelineAsset.GetOutputTracks())
                 {
                     if(trackAsset is TimeMachineControlTrack)
@@ -125,24 +125,24 @@ namespace Iridescent.TimeMachine
 
             stringBuilder.Clear();
             
-            if(timeline == null) return;
+            if(timeMachineTrackManager.playableDirector == null) return;
             
             if(timelineAsset == null) InitTrack();
             
             if(timeMachineControlTrack == null) return;
             var fps = (float)timelineAsset.editorSettings.frameRate;
-            var dateTime = TimeSpan.FromSeconds(timeline.time);
+            var dateTime = TimeSpan.FromSeconds(timeMachineTrackManager.playableDirector.time);
             if(timeMachineControlTrack.timeMachineControlMixer == null) return;
             if(timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null) return;
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             if(timeMachineControlClip == null) return;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
-            stringBuilder.Append($"[{timeline.name}]  ");
-            stringBuilder.Append($"{timeline.state} ");
+            stringBuilder.Append($"[{timeMachineTrackManager.playableDirector.name}]  ");
+            stringBuilder.Append($"{timeMachineTrackManager.playableDirector.state} ");
             stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
             stringBuilder.Append(" ");
-            stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeline.time)));
+            stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)));
             stringBuilder.Append("f  ");
             stringBuilder.Append($"clip: {clipName}");
             
