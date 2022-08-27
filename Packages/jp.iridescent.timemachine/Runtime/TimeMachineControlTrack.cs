@@ -41,6 +41,7 @@ namespace Iridescent.TimeMachine
         public void ForceMoveClip(int i)
         {
             Debug.Log($"move {i}");
+            if(mixer.GetBehaviour() == null) return;
             mixer.GetBehaviour().ForceMoveClip(i);
         }
 

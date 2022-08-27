@@ -139,6 +139,7 @@ namespace Iridescent.TimeMachine
 
         public void ForceMoveClip(int index)
         {
+            if(clips.Count == 0 || clips == null) return;
             currentInputIndex = index;
             FinishRole(currentInputIndex-1);
             playableDirector.time = clips[index].start;
