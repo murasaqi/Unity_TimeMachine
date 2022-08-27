@@ -19,6 +19,8 @@ namespace Iridescent.TimeMachine
 
         [SerializeField] public TimeMachineTrackManager timeMachineTrackManager;
         // [SerializeField] public PlayableDirector timeline;
+        [Header("TC Format [scene,state,tc,frame,clipName]")]
+        [SerializeField] public string tcFormat = "scene,state,tc,frame,clipName";
         [SerializeField] public TextMeshProUGUI textMeshProUGUI;
         [SerializeField] public RectTransform clipButtonContainer;
         [SerializeField] public Color finishTextColor = Color.gray;
@@ -112,46 +114,84 @@ namespace Iridescent.TimeMachine
         private string GetClipButtonName(TimelineClip clip)
         {
             var asset = clip.asset as TimeMachineControlClip;
+
+            
             return $"{TimeSpan.FromSeconds(clip.start).ToString(@"hh\:mm\:ss\:ff")}\n[{asset.timeMachineClipEvent}] {clip.displayName}\n{TimeSpan.FromSeconds(clip.end).ToString(@"hh\:mm\:ss\:ff")}";
         }
 
-        // Update is called once per frame
-        void Update()
+
+        private void UpdateTC()
         {
             if(stringBuilder == null)
             {
                 stringBuilder = new StringBuilder();
             }
 
+            var format = tcFormat.Split();
             stringBuilder.Clear();
-            
-            if(timeMachineTrackManager.playableDirector == null) return;
-            
-            if(timelineAsset == null) InitTrack();
-            
-            if(timeMachineControlTrack == null) return;
+      
             var fps = (float)timelineAsset.editorSettings.frameRate;
             var dateTime = TimeSpan.FromSeconds(timeMachineTrackManager.playableDirector.time);
-            if(timeMachineControlTrack.timeMachineControlMixer == null) return;
-            if(timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null) return;
+            // stringBuilder.Append($"[{timeMachineTrackManager.playableDirector.name}]  ");
+            // stringBuilder.Append($"{timeMachineTrackManager.playableDirector.state} ");
+            // stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
+            // stringBuilder.Append(" ");
+            // stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)));
+            // stringBuilder.Append("f  ");
+            // stringBuilder.Append($"clip: {clipName}");
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
-            if(timeMachineControlClip == null) return;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
-            stringBuilder.Append($"[{timeMachineTrackManager.playableDirector.name}]  ");
-            stringBuilder.Append($"{timeMachineTrackManager.playableDirector.state} ");
-            stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
-            stringBuilder.Append(" ");
-            stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)));
-            stringBuilder.Append("f  ");
-            stringBuilder.Append($"clip: {clipName}");
+            foreach (var f in format)
+            {
+                switch (f)
+                {
+                    case "scene" :
+                        stringBuilder.Append($"[{timeMachineTrackManager.playableDirector.name}]  ");
+                        break;
+                    case   "state" :
+                        stringBuilder.Append($"{timeMachineTrackManager.playableDirector.state} ");
+                        break;
+                    case "tc" :
+                        stringBuilder.Append($"{dateTime.ToString(@"hh\:mm\:ss\:ff")} ");
+                        break;
+                    case "frame" :
+                        stringBuilder.Append(($"{Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)} f"));
+                        break;
+                    case "clipName" :
+                        stringBuilder.Append($"clip: {clipName} ");
+                        break;
+                }
+            }
             
             if(textMeshProUGUI != null)
             {
                 textMeshProUGUI.text = stringBuilder.ToString();
             }
 
-
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            
+            if(timeMachineTrackManager.playableDirector == null) return;
+            
+            if(timelineAsset == null) InitTrack();
+            
+            if(timeMachineControlTrack == null) return;
+            
+            
+            if(timeMachineControlTrack.timeMachineControlMixer == null) return;
+            if(timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null) return;
+            var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip;
+            var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
+            if(timeMachineControlClip == null) return;
+            
+            
+           
+            
+         
+            UpdateTC();
 
             var reachCurrentClip = false;
             foreach (var clipTextPair in clipButtonTextDictionary)
