@@ -32,6 +32,7 @@ namespace Iridescent.TimeMachine
 //[RequireComponent(typeof(Canvas))]
 // [RequireComponent(typeof(PlayableDirector))]
 // [ExecuteInEditMode] 
+[ExecuteAlways]
 
     public class TimeMachineTrackManager : MonoBehaviour
     {
@@ -85,9 +86,13 @@ namespace Iridescent.TimeMachine
 
         private void OnEnable()
         {
-            // timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            if(playableDirector != null)
+            timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            Init();
         }
-
+        
+        
+        [ContextMenu("Init")]
         public void Init()
         {
             timelineAsset = playableDirector.playableAsset as TimelineAsset;
