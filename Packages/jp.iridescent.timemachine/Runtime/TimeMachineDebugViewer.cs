@@ -92,6 +92,8 @@ namespace Iridescent.TimeMachine
                     });
                     clipButtonTextDictionary.Add(timelineClip,textMesh);
                     button.transform.SetParent(clipButtonContainer);
+                    button.transform.localScale = Vector3.one;
+                    button.transform.localPosition = Vector3.zero;
                     buttonRectTransforms.Add(button.GetComponent<RectTransform>());
                     buttonRectTransforms.Last().sizeDelta = clipButtonSize;
                     i++;
