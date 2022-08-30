@@ -94,6 +94,7 @@ namespace Iridescent.TimeMachine
                     button.transform.SetParent(clipButtonContainer);
                     button.transform.localScale = Vector3.one;
                     button.transform.localPosition = Vector3.zero;
+                    button.transform.localEulerAngles = Vector3.zero;
                     buttonRectTransforms.Add(button.GetComponent<RectTransform>());
                     buttonRectTransforms.Last().sizeDelta = clipButtonSize;
                     i++;
@@ -119,6 +120,32 @@ namespace Iridescent.TimeMachine
 
             
             return $"{TimeSpan.FromSeconds(clip.start).ToString(@"hh\:mm\:ss\:ff")}\n[{asset.timeMachineClipEvent}] {clip.displayName}\n{TimeSpan.FromSeconds(clip.end).ToString(@"hh\:mm\:ss\:ff")}";
+        }
+
+        private void DestroyButtons()
+        {
+            for (int i =clipButtonContainer.childCount-1 ; i >= 0; i--)
+            {
+                DestroyImmediate(clipButtonContainer.GetChild(i).gameObject);
+            }
+            
+            clipButtonTextDictionary.Clear();
+            buttonRectTransforms.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            DestroyButtons();
+        }
+
+        private void OnApplicationQuit()
+        {
+            DestroyButtons();
+        }
+
+        private void OnDisable()
+        {
+            DestroyButtons();
         }
 
 
