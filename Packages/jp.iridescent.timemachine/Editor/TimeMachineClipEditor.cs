@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -9,26 +8,10 @@ using UnityEngine.Timeline;
 
 namespace Iridescent.TimeMachine
 {
-    [CustomTimelineEditor(typeof(TimeMachineControlClip))]
+    [CustomTimelineEditor(typeof(TimeMachineClip))]
     public class TimeMachineControlClipEditor: ClipEditor
     {
-        [InitializeOnLoad]
-        class EditorInitialize
-        {
-            static EditorInitialize()
-            {
-                playableDirector = GetMasterDirector();  
-                pauseIconTexture = Resources.Load<Texture2D>("icon_pause");
-                muteTexture = Resources.Load<Texture2D>("icon_ignore");
-                skipTexture = Resources.Load<Texture2D>("icon_skip");
-                loopTexture = Resources.Load<Texture2D>("icon_loop");
-                playTexture = Resources.Load<Texture2D>("icon_play");
-                dotTexture = Resources.Load<Texture2D>("icon_dot");
-              
-            } 
-            static PlayableDirector GetMasterDirector() { return TimelineEditor.masterDirector; }
-        }
-     
+
         private static PlayableDirector playableDirector;
         private static Texture2D pauseIconTexture;
         private static Texture2D playTexture;
@@ -46,11 +29,11 @@ namespace Iridescent.TimeMachine
                 tooltip = "Tooltip"
             };
         }
-        
+
         public override void OnClipChanged(TimelineClip clip)
         {
-        
-            var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
+
+            TimeMachineClip timeMachineControlClip = (TimeMachineClip)clip.asset;
             if (timeMachineControlClip == null)
                 return;
             clip.displayName = $"#{timeMachineControlClip.clipIndex} {timeMachineControlClip.sectionName}";
@@ -60,7 +43,7 @@ namespace Iridescent.TimeMachine
         public override void OnCreate(TimelineClip clip, TrackAsset track, TimelineClip clonedFrom)
         {
             base.OnCreate(clip, track, clonedFrom);
-       
+
         }
 
 
@@ -69,27 +52,28 @@ namespace Iridescent.TimeMachine
             base.DrawBackground(clip, region);
 
 
-            var timelineClip = (TimeMachineControlClip) clip.asset;
-      
-            var iconSize = 12;
-            var tallySize = 8;
-            var margin = 2;
-            var iconPosition = new Rect(region.position.width - iconSize - margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
-            var tallyPosition = new Rect( margin, region.position.height/2f-tallySize/2f, tallySize, tallySize);
-            var alpha = timelineClip.mute ? 0.5f : 1f;
-            var color = timelineClip.mute ? Color.white : new Color(0, 1f, 0.1f);
-            var isFinish = timelineClip.isFinishRole;
+            TimeMachineClip timelineClip = (TimeMachineClip)clip.asset;
+
+            TimeMachineTrack track = clip.GetParentTrack() as TimeMachineTrack;
+            int iconSize = 12;
+            int tallySize = 8;
+            int margin = 2;
+            Rect iconPosition = new Rect(region.position.width - iconSize - margin, region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
+            Rect tallyPosition = new Rect(margin, region.position.height / 2f - tallySize / 2f, tallySize, tallySize);
+            float alpha = track.muteClipRole ? 0.5f : 1f;
+            Color color = track.muteClipRole ? Color.white : new Color(0, 1f, 0.1f);
+            bool isFinish = timelineClip.isFinishRole;
             Texture2D icon = null;
             if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.LOOP)
             {
                 icon = loopTexture;
             }
-            
+
             if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.SKIP)
             {
                 icon = skipTexture;
             }
-            
+
             if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.THOROUGH)
             {
                 icon = playTexture;
@@ -100,32 +84,48 @@ namespace Iridescent.TimeMachine
                 icon = pauseIconTexture;
             }
 
-            if (timelineClip.mute)
+            if (track.muteClipRole)
             {
                 icon = muteTexture;
             }
-           
-            
+
+
             GUI.DrawTexture(iconPosition,
-                icon, ScaleMode.ScaleAndCrop,
-                true,
-                0,
-                new Color(color.r,color.g,color.b, alpha), 0, 0);
-            
+                            icon, ScaleMode.ScaleAndCrop,
+                            true,
+                            0,
+                            new Color(color.r, color.g, color.b, alpha), 0, 0);
+
             GUI.DrawTexture(tallyPosition,
-                dotTexture, ScaleMode.ScaleAndCrop,
-                true,
-                0,
-                timelineClip.isFinishRole ? new Color(1,1,1,0.5f): new Color(0f,1f,0.1f,1f), 0, 0);
-            
+                            dotTexture, ScaleMode.ScaleAndCrop,
+                            true,
+                            0,
+                            timelineClip.isFinishRole ? new Color(1, 1, 1, 0.5f) : new Color(0f, 1f, 0.1f, 1f), 0, 0);
+
         }
 
-     
+
 
         public override void GetSubTimelines(TimelineClip clip, PlayableDirector director, List<PlayableDirector> subTimelines)
         {
             base.GetSubTimelines(clip, director, subTimelines);
         }
+
+        [InitializeOnLoad]
+        private class EditorInitialize
+        {
+            static EditorInitialize()
+            {
+                playableDirector = GetMasterDirector();
+                pauseIconTexture = Resources.Load<Texture2D>("icon_pause");
+                muteTexture = Resources.Load<Texture2D>("icon_ignore");
+                skipTexture = Resources.Load<Texture2D>("icon_skip");
+                loopTexture = Resources.Load<Texture2D>("icon_loop");
+                playTexture = Resources.Load<Texture2D>("icon_play");
+                dotTexture = Resources.Load<Texture2D>("icon_dot");
+
+            }
+            private static PlayableDirector GetMasterDirector() { return TimelineEditor.masterDirector; }
+        }
     }
 }
-#endif

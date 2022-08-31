@@ -1,36 +1,31 @@
-
-#if  UNITY_EDITOR
-
 using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace Iridescent.TimeMachine
 {
-    [CustomEditor(typeof(TimeMachineControlTrack))]
-    public class TimeMachineControlTrackEditor : Editor
+    [CustomEditor(typeof(TimeMachineTrack))]
+    public class TimeMachineControlTrackEditor: Editor
     {
         // OnInspectorGUIではなくCreateInspectorGUIを使う
         public override VisualElement CreateInspectorGUI()
         {
-            var track = target as TimeMachineControlTrack;
+            TimeMachineTrack track = target as TimeMachineTrack;
             // Inspector拡張の場合、VisualElementはnewする
-            var root = new VisualElement();
+            VisualElement root = new VisualElement();
 
             // デフォルトのInspector表示を追加
             IMGUIContainer defaultInspector = new IMGUIContainer(() => DrawDefaultInspector());
             root.Add(defaultInspector);
 
-            var button = new Button();
+            Button button = new Button();
             button.text = "Initialize clips";
-            
-            button.clicked+=()=>
+
+            button.clicked += () =>
             {
                 track.Initialize();
             };
             root.Add(button);
             return root;
         }
-    }    
+    }
 }
-
-#endif
