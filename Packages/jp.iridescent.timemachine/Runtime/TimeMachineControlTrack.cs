@@ -7,7 +7,7 @@ using UnityEngine.Timeline;
 
 namespace Iridescent.TimeMachine
 {
-    [TrackColor(255f / 255f, 255f / 255f, 94f / 255f)]
+    [TrackColor(177f / 255f, 142f / 255f, 255f / 255f)]
     [TrackClipType(typeof(TimeMachineControlClip))]
     [TrackBindingType(typeof(TimeMachineTrackManager))]
     public class TimeMachineControlTrack : TrackAsset

@@ -36,6 +36,7 @@ namespace Iridescent.TimeMachine
         private static Texture2D skipTexture;
         private static Texture2D loopTexture;
         private static Texture2D dotTexture;
+        private static Color iconColor = new Color(143f / 255f, 242f / 255f, 216f / 255f);
         public override ClipDrawOptions GetClipOptions(TimelineClip clip)
         {
             return new ClipDrawOptions
@@ -77,7 +78,7 @@ namespace Iridescent.TimeMachine
             var iconPosition = new Rect(region.position.width - iconSize - margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
             var tallyPosition = new Rect( margin, region.position.height/2f-tallySize/2f, tallySize, tallySize);
             var alpha = timelineClip.mute ? 0.5f : 1f;
-            var color = timelineClip.mute ? Color.white : new Color(0, 1f, 0.1f);
+            var color = timelineClip.mute ? Color.white : iconColor;
             var isFinish = timelineClip.isFinishRole;
             Texture2D icon = null;
             if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.LOOP)
@@ -116,7 +117,7 @@ namespace Iridescent.TimeMachine
                 dotTexture, ScaleMode.ScaleAndCrop,
                 true,
                 0,
-                timelineClip.isFinishRole ? new Color(1,1,1,0.5f): new Color(0f,1f,0.1f,1f), 0, 0);
+                timelineClip.isFinishRole ? new Color(1,1,1,0.5f): iconColor, 0, 0);
             
         }
 
