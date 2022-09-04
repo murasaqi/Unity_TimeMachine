@@ -120,7 +120,7 @@ namespace Iridescent.TimeMachine
                 
                 var timeMachineClip = clip.asset as TimeMachineControlClip;
                 timeMachineClip.isFinishRole = false;
-                timeMachineClip.isFinishRole = false;
+                timeMachineClip.mute = false;
             }
         }
 
