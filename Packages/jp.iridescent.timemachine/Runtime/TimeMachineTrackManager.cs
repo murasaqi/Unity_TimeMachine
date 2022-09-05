@@ -132,6 +132,8 @@ namespace Iridescent.TimeMachine
         public void ResetTimeline()
         {
             if (OnInit != null) OnInit.Invoke();
+            
+            timeMachineControlTrack.Initialize();
         }
 
    
@@ -147,6 +149,24 @@ namespace Iridescent.TimeMachine
         public void Play()
         {
             playableDirector.Play();
+        }
+        
+
+        public void Replay()
+        {
+            playableDirector.Stop();
+            playableDirector.Play();
+        }
+
+        public void ResetAndReplay()
+        {
+            playableDirector.Stop();
+            ResetTimeline();
+            playableDirector.Play();
+        }
+        public void Resume()
+        {
+            playableDirector.Resume();
         }
 
         public void Pause()
