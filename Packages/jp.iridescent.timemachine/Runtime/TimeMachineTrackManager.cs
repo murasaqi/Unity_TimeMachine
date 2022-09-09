@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -176,6 +177,8 @@ namespace Iridescent.TimeMachine
 
         public void Stop()
         {
+            playableDirector.time = 0f;
+            playableDirector.Evaluate();
             playableDirector.Stop();
         }
 
