@@ -73,51 +73,74 @@ namespace Iridescent.TimeMachine
             var timelineClip = (TimeMachineControlClip) clip.asset;
       
             var iconSize = 12;
-            var tallySize = 8;
             var margin = 2;
-            var iconPosition = new Rect(region.position.width - iconSize - margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
-            var tallyPosition = new Rect( margin, region.position.height/2f-tallySize/2f, tallySize, tallySize);
+            var onEndIconPosition = new Rect(region.position.width - iconSize - margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
+            var onStartIconPosition = new Rect( margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
             var alpha = timelineClip.mute ? 0.5f : 1f;
             var color = timelineClip.mute ? Color.white : iconColor;
-            var isFinish = timelineClip.isFinishRole;
-            Texture2D icon = null;
-            if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.LOOP)
+            var isFinishOnStart = timelineClip.isFinishOnStart;
+            var isFinishOnEnd = timelineClip.isFinishOnEnd;
+            Texture2D onStartIcon = null;
+            Texture2D onEndIcon = null;
+            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.LOOP)
             {
-                icon = loopTexture;
+                onStartIcon = loopTexture;
             }
             
-            if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.SKIP)
+            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.SKIP)
             {
-                icon = skipTexture;
+                onStartIcon = skipTexture;
             }
             
-            if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.THOROUGH)
+            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.THOROUGH)
             {
-                icon = playTexture;
+                onStartIcon = playTexture;
             }
 
-            if (timelineClip.timeMachineClipEvent == TimeMachineClipEvent.PAUSE)
+            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.WAIT)
             {
-                icon = pauseIconTexture;
+                onStartIcon = pauseIconTexture;
             }
 
+            
+            
+            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.LOOP)
+            {
+                onEndIcon = loopTexture;
+            }
+            
+            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.SKIP)
+            {
+                onEndIcon = skipTexture;
+            }
+            
+            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.THOROUGH)
+            {
+                onEndIcon = playTexture;
+            }
+
+            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.WAIT)
+            {
+                onEndIcon = pauseIconTexture;
+            }
             if (timelineClip.mute)
             {
-                icon = muteTexture;
+                onStartIcon = muteTexture;
+                onEndIcon = muteTexture;
             }
            
             
-            GUI.DrawTexture(iconPosition,
-                icon, ScaleMode.ScaleAndCrop,
+            GUI.DrawTexture(onStartIconPosition,
+                onStartIcon, ScaleMode.ScaleAndCrop,
                 true,
                 0,
-                new Color(color.r,color.g,color.b, alpha), 0, 0);
+                timelineClip.isFinishOnStart ? new Color(1,1,1,0.5f): iconColor, 0, 0);
             
-            GUI.DrawTexture(tallyPosition,
-                dotTexture, ScaleMode.ScaleAndCrop,
+            GUI.DrawTexture(onEndIconPosition,
+                onEndIcon, ScaleMode.ScaleAndCrop,
                 true,
                 0,
-                timelineClip.isFinishRole ? new Color(1,1,1,0.5f): iconColor, 0, 0);
+                timelineClip.isFinishOnEnd ? new Color(1,1,1,0.5f): iconColor, 0, 0);
             
         }
 

@@ -9,26 +9,27 @@ using UnityEngine.Timeline;
 
 namespace Iridescent.TimeMachine
 {
-    [Serializable]
-    public struct TimeMachineControlClipValue
-    {
-        public int index;
-        public TimeMachineClipEvent clipEvent;
-        public string name;
-        public double duration;
-        public double start;
-    }
+    // [Serializable]
+    // public struct TimeMachineControlClipValue
+    // {
+    //     public int index;
+    //     public TimeMachineClipEvent clipEvent;
+    //     public string name;
+    //     public double duration;
+    //     public double start;
+    // }
 
 
     [Serializable]
     public enum TimeMachineClipEvent
     {
-        PAUSE,
+        WAIT,
         LOOP,
         SKIP,
         THOROUGH
     }
-
+    
+   
 
 //[RequireComponent(typeof(Canvas))]
 // [RequireComponent(typeof(PlayableDirector))]
@@ -120,7 +121,8 @@ namespace Iridescent.TimeMachine
             {
                 
                 var timeMachineClip = clip.asset as TimeMachineControlClip;
-                timeMachineClip.isFinishRole = false;
+                timeMachineClip.isFinishOnStart = false;
+                timeMachineClip.isFinishOnEnd = false;
                 timeMachineClip.mute = false;
             }
         }

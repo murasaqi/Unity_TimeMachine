@@ -34,7 +34,12 @@ namespace Iridescent.TimeMachine
             foreach (var clip in m_Clips)
             {
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
-                if(timeMachineControlClip != null)timeMachineControlClip.isFinishRole = false;
+                if (timeMachineControlClip != null)
+                {
+                    timeMachineControlClip.isFinishOnStart = false;
+                    timeMachineControlClip.isFinishOnEnd = false;
+                }
+                
             }
         }
 

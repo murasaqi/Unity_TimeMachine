@@ -12,8 +12,11 @@ namespace Iridescent.TimeMachine
         [SerializeField, HideInInspector] public TimeMachineControlBehaviour timeMachineControlBehaviour;
         [SerializeField] public string sectionName;
         [SerializeField] public bool mute;
-        [SerializeField] public TimeMachineClipEvent timeMachineClipEvent = TimeMachineClipEvent.THOROUGH;
-        [SerializeField] public bool isFinishRole = false;
+        [SerializeField] public TimeMachineClipEvent OnClipStartEvent = TimeMachineClipEvent.THOROUGH;
+        [SerializeField] public TimeMachineClipEvent OnClipEndEvent = TimeMachineClipEvent.THOROUGH;
+        
+        [SerializeField] public bool isFinishOnStart = false;
+        [SerializeField] public bool isFinishOnEnd = false;
         [SerializeField, ] public int clipIndex= 0;
         public ClipCaps clipCaps
         {
@@ -25,7 +28,8 @@ namespace Iridescent.TimeMachine
         {
             var playable = ScriptPlayable<TimeMachineControlBehaviour>.Create(graph, timeMachineControlBehaviour);
             behaviour = playable.GetBehaviour();
-            behaviour.timeMachineClipEvent = timeMachineClipEvent;
+            // behaviour.timeMachineClipOnStartEvent = timeMachineClipOnStartEvent;
+            // behaviour.timeMachineClipOnEndEvent = timeMachineClipOnEndClipEvent;
             // behaviour.isFinishRole = isFinishRole;
             // behaviour.mute = mute;
             return playable;
