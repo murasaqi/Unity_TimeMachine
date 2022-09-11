@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Serialization;
 using UnityEngine.Timeline;
@@ -12,9 +13,13 @@ namespace Iridescent.TimeMachine
         [SerializeField, HideInInspector] public TimeMachineControlBehaviour timeMachineControlBehaviour;
         [SerializeField] public string sectionName;
         [SerializeField] public bool mute;
-        [SerializeField] public TimeMachineClipEvent OnClipStartEvent = TimeMachineClipEvent.THOROUGH;
-        [SerializeField] public TimeMachineClipEvent OnClipEndEvent = TimeMachineClipEvent.THOROUGH;
+        [SerializeField] public TimeMachineClipEvent onClipStartAction = TimeMachineClipEvent.THOROUGH;
+        [SerializeField] public TimeMachineClipEvent onClipEndAction = TimeMachineClipEvent.THOROUGH;
+        public UnityEvent onClipStartEvent;
+        public UnityEvent onClipEndEvent;
         
+        public bool isFireOnClipStart =false;
+        public bool isFireOnClipEnd = false;
         [SerializeField] public bool isFinishOnStart = false;
         [SerializeField] public bool isFinishOnEnd = false;
         [SerializeField, ] public int clipIndex= 0;

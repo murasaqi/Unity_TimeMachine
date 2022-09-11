@@ -82,44 +82,44 @@ namespace Iridescent.TimeMachine
             var isFinishOnEnd = timelineClip.isFinishOnEnd;
             Texture2D onStartIcon = null;
             Texture2D onEndIcon = null;
-            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.LOOP)
+            if (timelineClip.onClipStartAction == TimeMachineClipEvent.LOOP)
             {
                 onStartIcon = loopTexture;
             }
             
-            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.SKIP)
+            if (timelineClip.onClipStartAction == TimeMachineClipEvent.SKIP)
             {
                 onStartIcon = skipTexture;
             }
             
-            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.THOROUGH)
+            if (timelineClip.onClipStartAction == TimeMachineClipEvent.THOROUGH)
             {
                 onStartIcon = playTexture;
             }
 
-            if (timelineClip.OnClipStartEvent == TimeMachineClipEvent.WAIT)
+            if (timelineClip.onClipStartAction == TimeMachineClipEvent.WAIT)
             {
                 onStartIcon = pauseIconTexture;
             }
 
             
             
-            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.LOOP)
+            if (timelineClip.onClipEndAction == TimeMachineClipEvent.LOOP)
             {
                 onEndIcon = loopTexture;
             }
             
-            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.SKIP)
+            if (timelineClip.onClipEndAction == TimeMachineClipEvent.SKIP)
             {
                 onEndIcon = skipTexture;
             }
             
-            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.THOROUGH)
+            if (timelineClip.onClipEndAction == TimeMachineClipEvent.THOROUGH)
             {
                 onEndIcon = playTexture;
             }
 
-            if (timelineClip.OnClipEndEvent == TimeMachineClipEvent.WAIT)
+            if (timelineClip.onClipEndAction == TimeMachineClipEvent.WAIT)
             {
                 onEndIcon = pauseIconTexture;
             }

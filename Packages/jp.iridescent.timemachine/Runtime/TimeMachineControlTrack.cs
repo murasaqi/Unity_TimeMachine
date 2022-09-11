@@ -14,7 +14,7 @@ namespace Iridescent.TimeMachine
     {
 
         private ScriptPlayable<TimeMachineControlMixer> mixer;
-
+        public bool muteAll = false;
         public TimeMachineControlMixer timeMachineControlMixer
         {
             get { return mixer.GetBehaviour(); }
@@ -26,6 +26,7 @@ namespace Iridescent.TimeMachine
             mixer.GetBehaviour().clips = GetClips().ToList();
             mixer.GetBehaviour().playableDirector = go.GetComponent<PlayableDirector>();
             mixer.GetBehaviour().initialized = false;
+            mixer.GetBehaviour().timeMachineControlTrack = this;
             return mixer;
         }
         

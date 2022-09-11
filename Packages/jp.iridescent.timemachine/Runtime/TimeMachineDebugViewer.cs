@@ -119,7 +119,7 @@ namespace Iridescent.TimeMachine
             var asset = clip.asset as TimeMachineControlClip;
 
             
-            return $"{TimeSpan.FromSeconds(clip.start).ToString(@"hh\:mm\:ss\:ff")}\n[{asset.OnClipStartEvent}] {clip.displayName}\n{TimeSpan.FromSeconds(clip.end).ToString(@"hh\:mm\:ss\:ff")}";
+            return $"{TimeSpan.FromSeconds(clip.start).ToString(@"hh\:mm\:ss\:ff")}\n[{asset.onClipStartAction}] {clip.displayName}\n{TimeSpan.FromSeconds(clip.end).ToString(@"hh\:mm\:ss\:ff")}";
         }
 
         private void DestroyButtons()
