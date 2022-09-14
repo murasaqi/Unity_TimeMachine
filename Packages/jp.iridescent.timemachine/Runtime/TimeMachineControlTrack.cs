@@ -14,7 +14,7 @@ namespace Iridescent.TimeMachine
     {
 
         private ScriptPlayable<TimeMachineControlMixer> mixer;
-        public bool muteAll = false;
+        public bool muteInEditeMode = false;
         public TimeMachineControlMixer timeMachineControlMixer
         {
             get { return mixer.GetBehaviour(); }

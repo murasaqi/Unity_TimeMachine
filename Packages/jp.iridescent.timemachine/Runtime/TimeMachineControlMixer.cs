@@ -36,13 +36,12 @@ namespace Iridescent.TimeMachine
             // Debug.Log($"initialized: {initialized}");
             trackBinding = playerData as TimeMachineTrackManager;
 
-            if (!trackBinding)
+            if (!trackBinding || !timeMachineControlTrack)
                 return;
 
             if (!initialized)
             {
-               
-
+                
                 var index = 0;
                 foreach (var clip in clips)
                 {
@@ -56,7 +55,6 @@ namespace Iridescent.TimeMachine
                 trackBinding.OnInit += InitEvents;
                 trackBinding.OnForceMoveClip += ForceMoveClip;
                 trackBinding.OnNextState += OnNextState;
-
                 initialized = true;
             }
 
@@ -106,8 +104,12 @@ namespace Iridescent.TimeMachine
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
 
                 var isMute = timeMachineControlClip.mute;
-                if (timeMachineControlTrack != null && timeMachineControlTrack.muteAll) isMute = true; 
-                
+                #if UNITY_EDITOR
+                if (!EditorApplication.isPlaying)
+                {
+                    if (timeMachineControlTrack != null && timeMachineControlTrack.muteInEditeMode) isMute = true; 
+                }
+                #endif
                 if (isMute) continue;
 
                 var isFinishOnStart = timeMachineControlClip.isFinishOnStart;
