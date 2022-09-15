@@ -201,6 +201,7 @@ namespace Iridescent.TimeMachine
 
         public void FinishCurrentClip()
         {
+            Debug.Log("finish current clip");
             timeMachineControlTrack.FinishRoleCurrentClip();
         }
       

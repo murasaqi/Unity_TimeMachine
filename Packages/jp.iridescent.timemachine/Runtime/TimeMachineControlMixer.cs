@@ -213,6 +213,21 @@ namespace Iridescent.TimeMachine
 
         }
 
+
+        public void FinishCurrentRole()
+        {
+            var timeMachineControlClip = clips[currentInputIndex].asset as TimeMachineControlClip;
+
+            if (timeMachineControlClip.isFinishOnStart == false)
+            {
+                FinishRole(currentInputIndex,true, false);
+            }
+            
+            if (timeMachineControlClip.isFinishOnStart)
+            {
+                FinishRole(currentInputIndex,true, true);
+            }
+        }
         public void FinishRole(int index, bool finishOnClipStart = true, bool finishOnClipEnd = true)
         {
             if(clips.Count <=index  && index < 0) return;

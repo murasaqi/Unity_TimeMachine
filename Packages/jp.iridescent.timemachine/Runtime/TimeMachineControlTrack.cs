@@ -59,7 +59,7 @@ namespace Iridescent.TimeMachine
         
         public void FinishRoleCurrentClip()
         {
-            mixer.GetBehaviour().FinishRole(mixer.GetBehaviour().GetCurrentInputIndex);
+            mixer.GetBehaviour().FinishCurrentRole();
         }
 
 
