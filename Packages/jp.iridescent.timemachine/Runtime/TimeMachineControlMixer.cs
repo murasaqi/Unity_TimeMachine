@@ -63,6 +63,33 @@ namespace Iridescent.TimeMachine
 
 
 
+
+            var syncClips = new List<TimelineClip>();
+            foreach (var clip in clips)
+            {
+                var timeMachineControlClip = clip.asset as TimeMachineControlClip;
+                if(timeMachineControlClip == null) continue;
+                if (timeMachineControlClip.isSyncClip)
+                {
+                    if (timeMachineControlClip.syncTimelineAsset != null &&
+                        timeMachineControlClip.syncClipTargetName != "" &&
+                        timeMachineControlClip.syncClipTargetName != "" && 
+                        timeMachineControlClip.syncClip.asset != null &&
+                        syncClips.Find(c => c ==timeMachineControlClip.syncClip) == null)
+                    {
+                        clip.start = timeMachineControlClip.syncClip.start;
+                        clip.duration = timeMachineControlClip.syncClip.duration;    
+                        syncClips.Add(timeMachineControlClip.syncClip);
+                    }
+                    else
+                    {
+                        timeMachineControlClip.isSyncClip = false;
+                    }
+                    
+                    // clip.end = timeMachineControlClip.syncClip.end;
+                }
+            }
+
             // Initialize and Fire on ClipStartEvent or ClipEndEvent
             foreach (var clip in clips)
             {

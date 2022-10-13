@@ -97,8 +97,7 @@ namespace Iridescent.TimeMachine
         [ContextMenu("Init")]
         public void Init()
         {
-            timelineAsset = playableDirector.playableAsset as TimelineAsset;
-            TimelineAsset asset = playableDirector.playableAsset as TimelineAsset;
+           
             if (clips != null)
             {
                 clips.Clear();
@@ -107,6 +106,9 @@ namespace Iridescent.TimeMachine
             {
                 clips = new List<TimelineClip>();
             }
+            timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            TimelineAsset asset = playableDirector.playableAsset as TimelineAsset;
+           
 
             foreach (var track in asset.GetOutputTracks())
             {

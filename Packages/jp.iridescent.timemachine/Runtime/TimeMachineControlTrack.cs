@@ -40,7 +40,7 @@ namespace Iridescent.TimeMachine
                     timeMachineControlClip.isFinishOnStart = false;
                     timeMachineControlClip.isFinishOnEnd = false;
                 }
-                
+                timeMachineControlClip.FindSyncClip();
             }
         }
 

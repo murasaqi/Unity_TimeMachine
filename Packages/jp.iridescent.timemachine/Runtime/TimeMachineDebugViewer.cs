@@ -76,6 +76,23 @@ namespace Iridescent.TimeMachine
             clipButtonTextDictionary.Clear();
             if(timeMachineTrackManager ==null) return;
             var buttonPrefab = Resources.Load<Button>("TimeMachinePrefab/TimeMachineClipButton");
+            
+            
+            
+            var resetButton = Instantiate(buttonPrefab);
+            var resetButtonTextMeshProUGUI =  resetButton.GetComponentInChildren<TextMeshProUGUI>();
+            resetButtonTextMeshProUGUI.text = "Reset";
+            resetButton.onClick.AddListener(() =>
+            {
+                timeMachineTrackManager.ResetAndReplay();
+            });
+            resetButtonTextMeshProUGUI.color = Color.yellow;
+            resetButton.transform.SetParent(clipButtonContainer);
+            buttonRectTransforms.Add(resetButton.GetComponent<RectTransform>());
+            buttonRectTransforms.Last().sizeDelta = clipButtonSize;
+            
+            
+            
             if (timeMachineControlTrack.hasClips)
             {
                 var i = 0;
@@ -119,7 +136,7 @@ namespace Iridescent.TimeMachine
             var asset = clip.asset as TimeMachineControlClip;
 
             
-            return $"{TimeSpan.FromSeconds(clip.start).ToString(@"hh\:mm\:ss\:ff")}\n[{asset.onClipStartAction}] {clip.displayName}\n{TimeSpan.FromSeconds(clip.end).ToString(@"hh\:mm\:ss\:ff")}";
+            return $"{TimeSpan.FromSeconds(clip.start).ToString(@"mm\:ss")}\n[{asset.onClipStartAction.ToString()[0]}] {clip.displayName} [{asset.onClipEndAction.ToString()[0]}]\n{TimeSpan.FromSeconds(clip.end).ToString(@"mm\:ss")}";
         }
 
         private void DestroyButtons()
@@ -242,23 +259,23 @@ namespace Iridescent.TimeMachine
             }
 
 
-            var buttonIndex = 0;
-            foreach (var button in buttonRectTransforms)
-            {
-                if (buttonIndex == timeMachineTrackManager.currentClipCount - 1 ||
-                    buttonIndex == timeMachineTrackManager.currentClipCount ||
-                    buttonIndex == timeMachineTrackManager.currentClipCount + 1)
-                {
-                    button.gameObject.SetActive(true);
-                }
-                else
-                {
-                    button.gameObject.SetActive(false);
-                }
-                 
-                button.sizeDelta = clipButtonSize;
-                buttonIndex++;
-            }
+            // var buttonIndex = 0;
+            // foreach (var button in buttonRectTransforms)
+            // {
+            //     if (buttonIndex == timeMachineTrackManager.currentClipCount - 1 ||
+            //         buttonIndex == timeMachineTrackManager.currentClipCount ||
+            //         buttonIndex == timeMachineTrackManager.currentClipCount + 1)
+            //     {
+            //         button.gameObject.SetActive(true);
+            //     }
+            //     else
+            //     {
+            //         button.gameObject.SetActive(false);
+            //     }
+            //      
+            //     button.sizeDelta = clipButtonSize;
+            //     buttonIndex++;
+            // }
             
         }
     }

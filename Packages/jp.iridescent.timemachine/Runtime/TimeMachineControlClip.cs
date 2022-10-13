@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Serialization;
 using UnityEngine.Timeline;
+using Object = System.Object;
 
 namespace Iridescent.TimeMachine
 {
@@ -23,6 +25,14 @@ namespace Iridescent.TimeMachine
         [SerializeField] public bool isFinishOnStart = false;
         [SerializeField] public bool isFinishOnEnd = false;
         [SerializeField, ] public int clipIndex= 0;
+        
+        
+        public bool isSyncClip = false;
+        public TimelineAsset syncTimelineAsset;
+        public string syncTrackTargetName = null;
+        public string syncClipTargetName = null;
+        public TimelineClip syncClip = null;
+        
         public ClipCaps clipCaps
         {
             get { return ClipCaps.None; }
@@ -33,12 +43,32 @@ namespace Iridescent.TimeMachine
         {
             var playable = ScriptPlayable<TimeMachineControlBehaviour>.Create(graph, timeMachineControlBehaviour);
             behaviour = playable.GetBehaviour();
+
+            FindSyncClip();
+            
             // behaviour.timeMachineClipOnStartEvent = timeMachineClipOnStartEvent;
             // behaviour.timeMachineClipOnEndEvent = timeMachineClipOnEndClipEvent;
             // behaviour.isFinishRole = isFinishRole;
             // behaviour.mute = mute;
             return playable;
         }
+
+        
+        [ContextMenu("FindSyncClip")]
+        public void FindSyncClip()
+        {
+            if (syncTimelineAsset != null)
+            {
+                var track = syncTimelineAsset.GetOutputTracks().ToList().Find(t=> t.name == syncTrackTargetName);
+                if (track != null)
+                {
+                    var clips = track.GetClips().ToList();
+                    syncClip = clips.Find(c => c.displayName == syncClipTargetName);        
+                }
+            
+            }
+        }
+        
         
 
 
