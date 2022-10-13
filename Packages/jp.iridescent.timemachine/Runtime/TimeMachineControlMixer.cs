@@ -235,7 +235,7 @@ namespace Iridescent.TimeMachine
         {
             if(clips.Count == 0 || clips == null) return;
             currentInputIndex = index;
-            FinishRole(currentInputIndex-1);
+            FinishRole(currentInputIndex-1,true,true);
             playableDirector.time = clips[index].start;
 
         }
