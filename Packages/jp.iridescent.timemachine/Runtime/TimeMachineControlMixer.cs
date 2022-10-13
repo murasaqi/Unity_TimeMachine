@@ -225,19 +225,15 @@ namespace Iridescent.TimeMachine
                 timeMachineClip.isFinishOnEnd = false;
                 // timeMachineClip.mute = false;
             }
-
         }
-
-
-
 
         public void ForceMoveClip(int index)
         {
             if(clips.Count == 0 || clips == null) return;
             currentInputIndex = index;
-            FinishRole(currentInputIndex-1,true,true);
+            Debug.Log($"Force move to {currentInputIndex}");
+            FinishRole(currentInputIndex,false,false);
             playableDirector.time = clips[index].start;
-
         }
 
 
@@ -249,24 +245,33 @@ namespace Iridescent.TimeMachine
             {
                 FinishRole(currentInputIndex,true, false);
             }
-            
-            if (timeMachineControlClip.isFinishOnStart)
+            else
             {
                 FinishRole(currentInputIndex,true, true);
             }
         }
         public void FinishRole(int index, bool finishOnClipStart = true, bool finishOnClipEnd = true)
         {
-            if(clips.Count <=index  && index < 0) return;
+            // if(clips.Count <=index  && index < 0) return;
             
             var i = 0;
             foreach (var c in clips)
             {
                 var timeMachineClip = c.asset as TimeMachineControlClip;
-                if (i <= index)
+                if (i <= index-1)
+                {
+                    timeMachineClip.isFinishOnStart = true;
+                    timeMachineClip.isFinishOnEnd = true;
+                }
+                else if (i == index)
                 {
                     timeMachineClip.isFinishOnStart = finishOnClipStart;
                     timeMachineClip.isFinishOnEnd = finishOnClipEnd;
+                }
+                else
+                {
+                    timeMachineClip.isFinishOnStart = false;
+                    timeMachineClip.isFinishOnEnd = false;
                 }
                 i++;
             }
