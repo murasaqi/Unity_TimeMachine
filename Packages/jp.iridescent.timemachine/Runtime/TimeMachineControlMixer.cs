@@ -154,23 +154,24 @@ namespace Iridescent.TimeMachine
                     currentInputIndex = i;
                     trackBinding.currentClipCount = currentInputIndex;
 
+                }
+
+                if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.THOROUGH)
+                {
+                    timeMachineControlClip.isFinishOnStart = true;
+                  
+                }
+
+                if (!isFinishOnEnd && onEndEvent == TimeMachineClipEvent.THOROUGH &&
+                    time >= onClipEndTime)
+                {
+                    timeMachineControlClip.isFinishOnEnd = true;
+                    
+                }
 
 
-                    if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.THOROUGH)
-                    {
-                        timeMachineControlClip.isFinishOnStart = true;
-                        break;
-                    }
-
-                    if (!isFinishOnEnd && onEndEvent == TimeMachineClipEvent.THOROUGH &&
-                        time >= onClipEndTime)
-                    {
-                        timeMachineControlClip.isFinishOnEnd = true;
-                        break;
-                    }
-
-
-                    //  ======================= SKIP ========================= //
+                    /*
+                    //  ======================= SKIP ========================
                     if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.SKIP)
                     {
                         playableDirector.time = onClipEndTime;
@@ -189,8 +190,10 @@ namespace Iridescent.TimeMachine
                         timeMachineControlClip.isFinishOnEnd = true;
                         break;
                     }
+                    */
 
                     //  ======================= PAUSE ========================= //
+                    /*
                     if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.WAIT &&
                         time > onClipStartTime)
                     {
@@ -198,6 +201,7 @@ namespace Iridescent.TimeMachine
                         break;
 
                     }
+                    */
 
 
                     if (!isFinishOnEnd && onEndEvent == TimeMachineClipEvent.WAIT &&
@@ -218,7 +222,7 @@ namespace Iridescent.TimeMachine
                     }
 
 
-                }
+              
 
                 i++;
 
@@ -247,7 +251,7 @@ namespace Iridescent.TimeMachine
             if(clips.Count == 0 || clips == null) return;
             currentInputIndex = index;
             Debug.Log($"Force move to {currentInputIndex}");
-            FinishRole(currentInputIndex,false,false);
+            FinishRole(currentInputIndex,true,false);
             playableDirector.time = clips[index].start;
         }
 
