@@ -22,7 +22,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 1.7833333333333334
+    m_Start: 1.3999999761581423
     m_ClipIn: 0
     m_Asset: {fileID: 5073283438487031528}
     m_Duration: 1.0500000000000007
@@ -87,6 +87,39 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: '#0 M-01'
+  - m_Version: 1
+    m_Start: 2.449999976158143
+    m_ClipIn: 0
+    m_Asset: {fileID: 5087526388178087604}
+    m_Duration: 1.0500000000000007
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -3351289766563320883}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: '#2 M-03'
   m_Markers:
     m_Objects: []
   muteInEditeMode: 0
@@ -605,8 +638,8 @@ MonoBehaviour:
       m_Calls: []
   isFireOnClipStart: 1
   isFireOnClipEnd: 1
-  isFinishOnStart: 1
-  isFinishOnEnd: 1
+  isFinishOnStart: 0
+  isFinishOnEnd: 0
   clipIndex: 0
   isSyncClip: 0
   syncTimelineAsset: {fileID: 11400000}
@@ -683,18 +716,83 @@ MonoBehaviour:
   sectionName: M-02
   mute: 0
   onClipStartAction: 3
-  onClipEndAction: 0
+  onClipEndAction: 3
   onClipStartEvent:
     m_PersistentCalls:
       m_Calls: []
   onClipEndEvent:
     m_PersistentCalls:
       m_Calls: []
-  isFireOnClipStart: 1
+  isFireOnClipStart: 0
   isFireOnClipEnd: 0
-  isFinishOnStart: 1
+  isFinishOnStart: 0
   isFinishOnEnd: 0
   clipIndex: 1
+  isSyncClip: 0
+  syncTimelineAsset: {fileID: 11400000}
+  syncTrackTargetName: CubeInOut
+  syncClipTargetName: Out
+  syncClip:
+    m_Version: 1
+    m_Start: 0
+    m_ClipIn: 0
+    m_Asset: {fileID: 0}
+    m_Duration: 0
+    m_TimeScale: 0
+    m_ParentTrack: {fileID: 0}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: 
+--- !u!114 &5087526388178087604
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cdba2faa2402fb4b8402da5005c5711, type: 3}
+  m_Name: TimeMachineControlClip(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  sectionName: M-03
+  mute: 0
+  onClipStartAction: 0
+  onClipEndAction: 3
+  onClipStartEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onClipEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  isFireOnClipStart: 0
+  isFireOnClipEnd: 0
+  isFinishOnStart: 0
+  isFinishOnEnd: 0
+  clipIndex: 2
   isSyncClip: 0
   syncTimelineAsset: {fileID: 11400000}
   syncTrackTargetName: CubeInOut

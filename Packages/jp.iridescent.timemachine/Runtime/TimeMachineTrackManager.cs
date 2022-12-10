@@ -9,17 +9,7 @@ using UnityEngine.Timeline;
 
 namespace Iridescent.TimeMachine
 {
-    // [Serializable]
-    // public struct TimeMachineControlClipValue
-    // {
-    //     public int index;
-    //     public TimeMachineClipEvent clipEvent;
-    //     public string name;
-    //     public double duration;
-    //     public double start;
-    // }
-
-
+    
     [Serializable]
     public enum TimeMachineClipEvent
     {
@@ -30,10 +20,7 @@ namespace Iridescent.TimeMachine
     }
     
    
-
-//[RequireComponent(typeof(Canvas))]
-// [RequireComponent(typeof(PlayableDirector))]
-// [ExecuteInEditMode] 
+    
 [ExecuteAlways]
 
     public class TimeMachineTrackManager : MonoBehaviour
@@ -129,6 +116,18 @@ namespace Iridescent.TimeMachine
             }
         }
 
+        
+        public List<TimeMachineControlClip> GetTimeMachineControlClips()
+        {
+            if(clips== null) return null;
+            List<TimeMachineControlClip> timeMachineControlClips = new List<TimeMachineControlClip>();
+            foreach (var clip in clips)
+            {
+                timeMachineControlClips.Add(clip.asset as TimeMachineControlClip);
+            }
+
+            return timeMachineControlClips;
+        }
         public void EnableClickButton()
         {
 
