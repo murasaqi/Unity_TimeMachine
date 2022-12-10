@@ -139,17 +139,21 @@ namespace Iridescent.TimeMachine
             }
            
             
-            GUI.DrawTexture(onStartIconPosition,
+            if(onStartIcon){
+                GUI.DrawTexture(onStartIconPosition,
                 onStartIcon, ScaleMode.ScaleAndCrop,
                 true,
                 0,
-                timelineClip.isFinishOnStart ? new Color(1,1,1,0.5f): iconColor, 0, 0);
+                timelineClip.isFinishOnStart ? new Color(1,1,1,0.5f): iconColor, 0, 0);}
             
-            GUI.DrawTexture(onEndIconPosition,
+            if(onEndIcon){
+                GUI.DrawTexture(onEndIconPosition,
                 onEndIcon, ScaleMode.ScaleAndCrop,
                 true,
                 0,
                 timelineClip.isFinishOnEnd ? new Color(1,1,1,0.5f): iconColor, 0, 0);
+                
+            }
             
         }
 
