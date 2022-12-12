@@ -20,7 +20,6 @@ public class TimeMachineExtOscReceiverEditor: Editor
     public override void OnInspectorGUI()
     {
         TimeMachineExtOscReceiver timeMachineExtOscReceiver = (TimeMachineExtOscReceiver)target;
-        DrawHeader();
         
         // change check
         EditorGUI.BeginChangeCheck();
