@@ -31,7 +31,7 @@ public class TimeMachineExtOscReceiverEditor: Editor
         
         EditorGUI.BeginDisabledGroup(!isEnable);
         
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddress"));
+        
         EditorGUILayout.Space();
         
         EditorGUILayout.BeginHorizontal();
@@ -43,8 +43,10 @@ public class TimeMachineExtOscReceiverEditor: Editor
             }
             EditorGUILayout.Space();
         }
+    
         EditorGUILayout.EndHorizontal(); 
-        
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddress"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscEvents"));
        
         
