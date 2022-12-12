@@ -44,7 +44,7 @@ public class TimeMachineExtOscReceiverEditor: Editor
     
         EditorGUILayout.EndHorizontal(); 
         EditorGUILayout.Space();
-        // EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddress"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddressPrefix"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscEvents"));
        
         
@@ -72,7 +72,7 @@ public class TimeMachineOscEvent
 
 public class TimeMachineExtOscReceiver : MonoBehaviour
 {
-    // public string oscAddress = "/TimeMachine/MoveTo";
+    public string oscAddressPrefix = "/TimeMachine/MoveTo";
     public TimeMachineTrackManager timeMachineTrackManager;
     public List<TimeMachineOscEvent> timeMachineOscEvents = new List<TimeMachineOscEvent>();
     public OSCReceiver oscReceiver;
@@ -103,7 +103,7 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
             var timeMachineControlClip = clip.asset as TimeMachineControlClip;
             timeMachineOscEvents.Add(new TimeMachineOscEvent()
             {
-                oscAddress = "/TimeMachine/MoveTo/C"+timeMachineControlClip.clipIndex,
+                oscAddress = oscAddressPrefix+"/C"+timeMachineControlClip.clipIndex,
                 clipIndex = timeMachineControlClip.clipIndex,
                 clipName = clip.displayName,
                 // oscValue = "C"+timeMachineControlClip.clipIndex.ToString()
@@ -111,7 +111,7 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
         }
         timeMachineOscEvents.Add(new TimeMachineOscEvent()
         {
-            oscAddress = "/TimeMachine/Finish",
+            oscAddress = oscAddressPrefix+"/Finish",
             clipIndex = -1,
             clipName = "Finish Current Role",
             // oscValue = "Finish"

@@ -21,13 +21,13 @@ public class TimeMachineOscDebugUI : MonoBehaviour
                 var instantiate = Instantiate(buttonPrefab, transform);
                 instantiate.transform.SetParent(transform);
                 
-                instantiate.GetComponentInChildren<TextMeshProUGUI>().text = timeMachineOscReceiver.oscAddress;
+                instantiate.GetComponentInChildren<TextMeshProUGUI>().text = timeMachineOscEvent.oscAddress;
                 var button = instantiate.GetComponent<Button>();
                 button.onClick.AddListener(() =>
                 {
-                    var message = new OSCMessage(timeMachineOscReceiver.oscAddress, new OSCValue[]
+                    var message = new OSCMessage(timeMachineOscEvent.oscAddress, new OSCValue[]
                     {
-                        new OSCValue( OSCValueType.String, timeMachineOscEvent.oscValue)
+                        new OSCValue( OSCValueType.String,null)
                     });
                     if(oscTransmitter)oscTransmitter.Send(message);
                 });
