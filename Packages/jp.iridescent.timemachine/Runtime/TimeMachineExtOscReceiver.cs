@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using Iridescent.TimeMachine;
@@ -11,14 +12,15 @@ using UnityEngine.Timeline;
 [Serializable]
 public class TimeMachineOscEvent
 {
-    public TimeMachineControlClip timeMachineControlClip;
-    public string oscAddress;
-
+    [HideInInspector]public int clipIndex;
+    [SerializeField,NonEditable]
+    public string clipName;
+    public string oscValue;
 }
 
 public class TimeMachineExtOscReceiver : MonoBehaviour
 {
-
+    public string oscAddress = "/TimeMachine/MoveTo";
     public TimeMachineTrackManager timeMachineTrackManager;
     public List<TimeMachineOscEvent> timeMachineOscEvents = new List<TimeMachineOscEvent>();
     public OSCReceiver oscReceiver;
@@ -35,36 +37,68 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
     [ContextMenu("Init")]
     public void Init()
     {
-        timeMachineOscEvents.Clear();
+        if(oscReceiver == null) return;
         if(timeMachineTrackManager== null) return;
+        
+        timeMachineOscEvents.Clear();
+       
 
         var clips = timeMachineTrackManager.clips;
-
+        
         if(clips == null) return;
         foreach (var clip in clips)
         {
             var timeMachineControlClip = clip.asset as TimeMachineControlClip;
             timeMachineOscEvents.Add(new TimeMachineOscEvent()
             {
-                timeMachineControlClip = timeMachineControlClip,
-                oscAddress = clip.displayName
+                clipIndex = timeMachineControlClip.clipIndex,
+                clipName = clip.displayName,
+                oscValue = "C"+timeMachineControlClip.clipIndex.ToString()
             });
         }
-        if(oscReceiver == null) return;
+        timeMachineOscEvents.Add(new TimeMachineOscEvent()
+        {
+            clipIndex = -1,
+            clipName = "Finish Current Role",
+            oscValue = "Finish"
+        });
         
+        
+        timeMachineOscEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
     }
 
     [ContextMenu("Bind")]
     public void Bind()
     {
-        foreach (var timeMachineOscEvent in timeMachineOscEvents)
+        
+        oscReceiver.Bind(oscAddress, (message) =>
         {
-            oscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
+            
+            var value = message.FindValues(OSCValueType.String).First().Value as string;
+            
+            if (value != null)
             {
-                var index = timeMachineOscEvent.timeMachineControlClip.clipIndex;
-                timeMachineTrackManager.MoveClip(index);
-            });
-        }
+                if (value == "Finish")
+                {
+                    timeMachineTrackManager.FinishCurrentClip();
+                }
+                else
+                {
+                    foreach (var timeMachineOscEvent in timeMachineOscEvents)
+                    {
+                        if (value == timeMachineOscEvent.oscValue)
+                        {
+                            var index = timeMachineOscEvent.clipIndex;
+                            timeMachineTrackManager.MoveClip(index);     
+                        }
+                   
+                    }   
+                }
+                 
+            }
+            
+        });
+        
     }
 
 }

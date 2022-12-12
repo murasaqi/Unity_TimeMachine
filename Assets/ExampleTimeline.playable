@@ -638,7 +638,7 @@ MonoBehaviour:
       m_Calls: []
   isFireOnClipStart: 1
   isFireOnClipEnd: 1
-  isFinishOnStart: 0
+  isFinishOnStart: 1
   isFinishOnEnd: 0
   clipIndex: 0
   isSyncClip: 0
@@ -716,14 +716,14 @@ MonoBehaviour:
   sectionName: M-02
   mute: 0
   onClipStartAction: 3
-  onClipEndAction: 3
+  onClipEndAction: 1
   onClipStartEvent:
     m_PersistentCalls:
       m_Calls: []
   onClipEndEvent:
     m_PersistentCalls:
       m_Calls: []
-  isFireOnClipStart: 0
+  isFireOnClipStart: 1
   isFireOnClipEnd: 0
   isFinishOnStart: 0
   isFinishOnEnd: 0
