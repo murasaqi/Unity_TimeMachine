@@ -53,6 +53,9 @@ public class TimeMachineExtOscReceiverEditor: Editor
 
         if (EditorGUI.EndChangeCheck())
         {
+            
+            // Record undo
+            Undo.RecordObject(target, "TimeMachineExtOscReceiver");
             serializedObject.ApplyModifiedProperties();
         }
         
