@@ -3,12 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
 using Iridescent.TimeMachine;
+using UnityEditor;
 #if USE_EXTOSC
 using extOSC;
-using UnityEngine.Timeline;
 
+
+
+
+// Custom Editor TimeMachineOscReciver
+#if UNITY_EDITOR
+[CustomEditor(typeof(TimeMachineExtOscReceiver))]
+[CanEditMultipleObjects]
+public class TimeMachineExtOscReceiverEditor: Editor
+{
+    public override void OnInspectorGUI()
+    {
+        TimeMachineExtOscReceiver timeMachineExtOscReceiver = (TimeMachineExtOscReceiver)target;
+        DrawHeader();
+        
+        // change check
+        EditorGUI.BeginChangeCheck();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscReceiver"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
+
+        var isEnable = timeMachineExtOscReceiver.oscReceiver != null &&
+                       timeMachineExtOscReceiver.timeMachineTrackManager != null;
+        
+        EditorGUI.BeginDisabledGroup(!isEnable);
+        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddress"));
+        EditorGUILayout.Space();
+        
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Initialize OSC Events", GUILayout.MaxWidth(200),GUILayout.Height(28)))
+            {
+                timeMachineExtOscReceiver.Init();
+            }
+            EditorGUILayout.Space();
+        }
+        EditorGUILayout.EndHorizontal(); 
+        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscEvents"));
+       
+        
+        EditorGUI.EndDisabledGroup();
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            serializedObject.ApplyModifiedProperties();
+        }
+        
+        
+        
+        
+
+       
+    }
+}
+#endif
 [Serializable]
 public class TimeMachineOscEvent
 {
