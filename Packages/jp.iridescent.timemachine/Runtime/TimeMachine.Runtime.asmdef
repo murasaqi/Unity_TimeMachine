@@ -4,7 +4,8 @@
     "references": [
         "GUID:f06555f75b070af458a003d92f9efb00",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:7b4b8ddafd710964f8c6a9a1cb414feb"
+        "GUID:7b4b8ddafd710964f8c6a9a1cb414feb",
+        "GUID:e8063cf3a345f9c46b7c7c4f14d54285"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -18,6 +19,11 @@
             "name": "com.iam1337.extosc",
             "expression": "",
             "define": "USE_EXTOSC"
+        },
+        {
+            "name": "com.hecomi.uosc",
+            "expression": "",
+            "define": "USE_UOSC"
         }
     ],
     "noEngineReferences": false

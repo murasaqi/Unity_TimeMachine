@@ -5,28 +5,25 @@ using System.Linq;
 using UnityEngine;
 using Iridescent.TimeMachine;
 using UnityEditor;
-#if USE_EXTOSC
-using extOSC;
+#if USE_UOSC
+using uOSC;
 
 
-
-
-// Custom Editor TimeMachineOscReciver
 #if UNITY_EDITOR
-[CustomEditor(typeof(TimeMachineExtOscReceiver))]
+[CustomEditor(typeof(TimeMachineUOscReceiver))]
 [CanEditMultipleObjects]
-public class TimeMachineExtOscReceiverEditor: Editor
+public class TimeMachineUOscReceiverEditor: Editor
 {
     public override void OnInspectorGUI()
     {
-        TimeMachineExtOscReceiver timeMachineExtOscReceiver = (TimeMachineExtOscReceiver)target;
+        TimeMachineUOscReceiver timeMachineExtOscReceiver = (TimeMachineUOscReceiver)target;
         
         // change check
         EditorGUI.BeginChangeCheck();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscReceiver"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscServer"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
-        var isEnable = timeMachineExtOscReceiver.oscReceiver != null &&
+        var isEnable = timeMachineExtOscReceiver.oscServer != null &&
                        timeMachineExtOscReceiver.timeMachineTrackManager != null;
         
         EditorGUI.BeginDisabledGroup(!isEnable);
@@ -61,27 +58,24 @@ public class TimeMachineExtOscReceiverEditor: Editor
 }
 #endif
 
-public class TimeMachineExtOscReceiver : MonoBehaviour
+
+public class TimeMachineUOscReceiver : MonoBehaviour
 {
     public string oscAddressPrefix = "/TimeMachine/MoveTo";
     public TimeMachineTrackManager timeMachineTrackManager;
     public List<TimeMachineOscEvent> timeMachineOscEvents = new List<TimeMachineOscEvent>();
-    public OSCReceiver oscReceiver;
+    public uOscServer oscServer;
+
     private void Start()
     {
         Bind();
     }
 
-    private void Update()
-    {
-        
-    }
-
     [ContextMenu("Init")]
     public void Init()
     {
-        if(oscReceiver == null) return;
-        if(timeMachineTrackManager== null) return;
+        if(oscServer == null) return;
+        if(timeMachineTrackManager == null) return;
         
         timeMachineOscEvents.Clear();
        
@@ -97,71 +91,38 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
                 oscAddress = oscAddressPrefix+"/C"+timeMachineControlClip.clipIndex,
                 clipIndex = timeMachineControlClip.clipIndex,
                 clipName = clip.displayName,
-                // oscValue = "C"+timeMachineControlClip.clipIndex.ToString()
             });
         }
         timeMachineOscEvents.Add(new TimeMachineOscEvent()
         {
             oscAddress = oscAddressPrefix+"/Finish",
             clipIndex = -1,
-            clipName = "Finish Current Role",
-            // oscValue = "Finish"
+            clipName = "Finish Current Role"
         });
         
         
         timeMachineOscEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
     }
 
-    [ContextMenu("Bind")]
     public void Bind()
     {
+        oscServer.onDataReceived.AddListener(OnDataReceived);
+    }
 
-
-        foreach (var timeMachineOscEvent in timeMachineOscEvents)
+    public void OnDataReceived(Message message)
+    {
+        foreach (var timeMachineOscEvent in timeMachineOscEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
         {
-            oscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
+            var index = timeMachineOscEvent.clipIndex;
+            if (index == -1)
             {
-                var value = message.FindValues(OSCValueType.String).First().Value as string;
-                var index = timeMachineOscEvent.clipIndex;
-                if (index == -1)
-                {
-                    timeMachineTrackManager.FinishCurrentClip();
-                }
-                else
-                {
-                    timeMachineTrackManager.MoveClip(index);    
-                }
-            });
+                timeMachineTrackManager.FinishCurrentClip();
+            }
+            else
+            {
+                timeMachineTrackManager.MoveClip(index);    
+            }
         }
-
-        // oscReceiver.Bind(oscAddress, (message) =>
-        // {
-        //     
-        //     var value = message.FindValues(OSCValueType.String).First().Value as string;
-        //     
-        //     if (value != null)
-        //     {
-        //         if (value == "Finish")
-        //         {
-        //             timeMachineTrackManager.FinishCurrentClip();
-        //         }
-        //         else
-        //         {
-        //             foreach (var timeMachineOscEvent in timeMachineOscEvents)
-        //             {
-        //                 if (value == timeMachineOscEvent.oscValue)
-        //                 {
-        //                     var index = timeMachineOscEvent.clipIndex;
-        //                     timeMachineTrackManager.MoveClip(index);     
-        //                 }
-        //            
-        //             }   
-        //         }
-        //          
-        //     }
-        //     
-        // });
-        
     }
 
 }
