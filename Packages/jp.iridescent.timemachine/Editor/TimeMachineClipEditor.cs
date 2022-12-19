@@ -26,6 +26,7 @@ namespace Iridescent.TimeMachine
                 dotTexture = Resources.Load<Texture2D>("icon_dot");
               
             } 
+            
             static PlayableDirector GetMasterDirector() { return TimelineEditor.masterDirector; }
         }
      
@@ -48,6 +49,7 @@ namespace Iridescent.TimeMachine
             };
         }
         
+        
         public override void OnClipChanged(TimelineClip clip)
         {
         
@@ -55,22 +57,43 @@ namespace Iridescent.TimeMachine
             if (timeMachineControlClip == null)
                 return;
 
-            if (timeMachineControlClip.isSyncClip && timeMachineControlClip.syncClip.asset != null)
-            {
-                clip.displayName = $"#{timeMachineControlClip.clipIndex} {timeMachineControlClip.sectionName} ({timeMachineControlClip.syncClip.displayName})";    
-            }
-            else
-            {
-                clip.displayName = $"#{timeMachineControlClip.clipIndex} {timeMachineControlClip.sectionName}";    
-            }
-            
+            if(timeMachineControlClip.mixer == null) return;
 
+            
+            var sameNameCount = 0;
+            foreach (var c in timeMachineControlClip.mixer.clips)
+            {
+               var asset = c.asset as TimeMachineControlClip;
+               if (asset != timeMachineControlClip)
+               {
+                   if (asset.sectionName == timeMachineControlClip.sectionName)
+                   {
+                       sameNameCount++;
+                   }
+               }
+            }
+
+            timeMachineControlClip.clipIndex = timeMachineControlClip.mixer.clips.IndexOf(clip);
+            
+            clip.displayName = sameNameCount == 0 ?  timeMachineControlClip.sectionName: $"{timeMachineControlClip.sectionName} ({sameNameCount})";
+            timeMachineControlClip.sectionName = clip.displayName;
+            
+            // SetDirty
+            EditorUtility.SetDirty(timeMachineControlClip);
+            AssetDatabase.SaveAssets();
 
         }
         public override void OnCreate(TimelineClip clip, TrackAsset track, TimelineClip clonedFrom)
         {
-            base.OnCreate(clip, track, clonedFrom);
-       
+            Debug.Log(clonedFrom);
+            var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
+            if (clonedFrom != null)
+            {
+                var clonedTimeMachineControlClip = (TimeMachineControlClip)clonedFrom.asset;
+                timeMachineControlClip.sectionName = clonedTimeMachineControlClip.sectionName + "(clone)";
+            }
+            
+
         }
 
 

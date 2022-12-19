@@ -196,18 +196,26 @@ namespace Iridescent.TimeMachine
 
         public void MoveClip(int index)
         {
-
-            
             if (playableDirector.state != PlayState.Playing)
             {
                 playableDirector.Play();
             }
             var i = Mathf.Clamp(index, 0, timeMachineControlTrack.GetClips().Count());
             timeMachineControlTrack.ForceMoveClip(i);
+        }
+
+        public void MoveClip(string sectionName)
+        {
+
+            if (playableDirector.state != PlayState.Playing)
+            {
+                playableDirector.Play();
+            }
+            timeMachineControlTrack.ForceMoveClip(sectionName);
 
         }
 
-        public void FinishCurrentClip()
+        public void FinishRole()
         {
             Debug.Log("finish current clip");
             timeMachineControlTrack.FinishRoleCurrentClip();

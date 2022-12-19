@@ -8,7 +8,7 @@ namespace Iridescent.TimeMachine
 {
     public class TimeMachineControlMixer : PlayableBehaviour
     {
-        internal List<TimelineClip> clips { get; set; }
+        public List<TimelineClip> clips { get; set; }
         internal PlayableDirector playableDirector;
         private List<TimeMachineControlBehaviour> inputs = new List<TimeMachineControlBehaviour>();
         
@@ -66,7 +66,10 @@ namespace Iridescent.TimeMachine
             var syncClips = new List<TimelineClip>();
             foreach (var clip in clips)
             {
+         
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
+                
+                // Debug.Log(timeMachineControlClip.sectionName);       
                 if(timeMachineControlClip == null) continue;
                 if (timeMachineControlClip.isSyncClip)
                 {
@@ -98,7 +101,7 @@ namespace Iridescent.TimeMachine
                 {
                     if (!timeMachineControlClip.isFireOnClipStart)
                     {
-                        timeMachineControlClip.onClipStartEvent?.Invoke();
+                        // timeMachineControlClip.onClipStartEvent?.Invoke();
                         timeMachineControlClip.isFireOnClipStart = true;
                     }
                 }
@@ -111,7 +114,7 @@ namespace Iridescent.TimeMachine
                 {
                     if (!timeMachineControlClip.isFireOnClipEnd)
                     {
-                        timeMachineControlClip.onClipEndEvent?.Invoke();
+                        // timeMachineControlClip.onClipEndEvent?.Invoke();
                         timeMachineControlClip.isFireOnClipEnd = true;
                     }
                 }

@@ -17,9 +17,7 @@ namespace Iridescent.TimeMachine
         [SerializeField] public bool mute;
         [SerializeField] public TimeMachineClipEvent onClipStartAction = TimeMachineClipEvent.THOROUGH;
         [SerializeField] public TimeMachineClipEvent onClipEndAction = TimeMachineClipEvent.THOROUGH;
-        public UnityEvent onClipStartEvent;
-        public UnityEvent onClipEndEvent;
-        
+       
         public bool isFireOnClipStart =false;
         public bool isFireOnClipEnd = false;
         [SerializeField] public bool isFinishOnStart = false;
@@ -38,19 +36,41 @@ namespace Iridescent.TimeMachine
             get { return ClipCaps.None; }
         }
         private TimeMachineControlBehaviour behaviour;
-
+        public TimeMachineControlMixer mixer;
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
             var playable = ScriptPlayable<TimeMachineControlBehaviour>.Create(graph, timeMachineControlBehaviour);
             behaviour = playable.GetBehaviour();
 
-            FindSyncClip();
             
-            // behaviour.timeMachineClipOnStartEvent = timeMachineClipOnStartEvent;
-            // behaviour.timeMachineClipOnEndEvent = timeMachineClipOnEndClipEvent;
-            // behaviour.isFinishRole = isFinishRole;
-            // behaviour.mute = mute;
+            FindSyncClip();
+
+            // if (sectionName == null || sectionName == "")
+            // {
+            //     sectionName = "Section_"+clipIndex;
+            //     // CheckSameSectionName();
+            // }
+           
             return playable;
+        }
+
+        private void CheckSameSectionName()
+        {
+            var sameNameCount = 0;
+            foreach (var c in mixer.clips)
+            {
+                var asset = c.asset as TimeMachineControlClip;
+                if (asset != this)
+                {
+                    if (asset.sectionName == sectionName)
+                    {
+                        sameNameCount++;
+                    }
+                }
+            }
+            
+            
+            sectionName = sameNameCount == 0 ?  sectionName: $"{sectionName} ({sameNameCount})";
         }
 
         

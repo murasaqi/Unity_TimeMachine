@@ -123,7 +123,7 @@ namespace Iridescent.TimeMachine
             finishButtonTextMeshProUGUI.text = "Finish";
             finishButton.onClick.AddListener(() =>
             {
-               timeMachineTrackManager.FinishCurrentClip();
+               timeMachineTrackManager.FinishRole();
             });
             finishButtonTextMeshProUGUI.color = Color.yellow;
             finishButton.transform.SetParent(clipButtonContainer);
