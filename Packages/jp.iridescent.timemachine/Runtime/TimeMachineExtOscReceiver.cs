@@ -186,16 +186,6 @@ public enum TimeMachineOscEventType
     AddressAndValue
 }
 
-// public enum TimeMachineEventType
-// {
-//     MoveClip,
-//     FinishRole,
-//     ResetAndReplay,
-//     Play,
-//     Pause,
-//     Stop,
-//     
-// }
 public class TimeMachineExtOscReceiver : MonoBehaviour
 {
     public TimeMachineOscEventType timeMachineOscEventType;
@@ -277,14 +267,9 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
                oscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
                {
                    var index = timeMachineOscEvent.clipIndex;
-                   // if (index == -1)
-                   // {
-                   //     timeMachineTrackManager.FinishRole();
-                   // }
-                   // else
-                   // {
-                       timeMachineTrackManager.MoveClip(index);    
-                   // }
+                   
+                    timeMachineTrackManager.MoveClip(index);    
+                   
                });
            } 
         }
