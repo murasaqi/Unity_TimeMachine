@@ -130,7 +130,7 @@ public class TimeMachineExtOscReceiver : MonoBehaviour
         {
             oscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
-                var value = message.FindValues(OSCValueType.String).First().Value as string;
+                // var value = message.FindValues(OSCValueType.String).First().Value as string;
                 var index = timeMachineOscEvent.clipIndex;
                 if (index == -1)
                 {
