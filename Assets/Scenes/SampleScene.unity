@@ -487,21 +487,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057b5d0370a0cc9429fcefd2b7cb7230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oscAddress: /TimeMachine/MoveTo
+  oscAddressPrefix: /TimeMachine/MoveTo
   timeMachineTrackManager: {fileID: 217870178}
   timeMachineOscEvents:
   - clipIndex: -1
     clipName: Finish Current Role
-    oscValue: Finish
+    oscAddress: /TimeMachine/MoveTo/Finish
   - clipIndex: 0
     clipName: '#0 M-01'
-    oscValue: C0
+    oscAddress: /TimeMachine/MoveTo/C0
   - clipIndex: 1
     clipName: '#1 M-02'
-    oscValue: C1
+    oscAddress: /TimeMachine/MoveTo/C1
   - clipIndex: 2
     clipName: '#2 M-03'
-    oscValue: C2
+    oscAddress: /TimeMachine/MoveTo/C2
   oscReceiver: {fileID: 1177643048}
 --- !u!1 &330585543
 GameObject:
