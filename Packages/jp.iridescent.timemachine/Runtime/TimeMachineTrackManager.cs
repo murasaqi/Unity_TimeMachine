@@ -26,7 +26,8 @@ namespace Iridescent.TimeMachine
     public class TimeMachineTrackManager : MonoBehaviour
     {
         [SerializeField] public PlayableDirector playableDirector;
-        [SerializeField] public List<TimelineClip> clips;
+        public bool muteInEditMode = false;
+        internal List<TimelineClip> clips;
 
         public delegate void NextStateHandler();
 
@@ -41,21 +42,16 @@ namespace Iridescent.TimeMachine
         public event ForceMoveClip OnForceMoveClip;
 
 
-        public UnityEvent onEndInitialize;
+        public UnityEvent onInitialize;
+        public UnityEvent onClipStart;
+        public UnityEvent onClipEnd;
         public int currentClipCount = 0;
         private TimelineAsset timelineAsset;
 
         private TimeMachineControlTrack timeMachineControlTrack;
-        // [SerializeField] public bool initialized;
+        
 
-        public PlayState state => playableDirector.state;
-
-        public int clipCount
-        {
-            get => transform.childCount;
-        }
-
-        public double frameDuration
+        public double FramePerSec
         {
             get
             {
@@ -70,6 +66,20 @@ namespace Iridescent.TimeMachine
 
         private void Start()
         {
+            onClipStart.AddListener(() =>
+            {
+                Debug.Log( "Clip Start");
+            });
+            
+            onClipEnd.AddListener(() =>
+            {
+                Debug.Log( "Clip End");
+            });
+            onInitialize.AddListener(() =>
+            {
+                Debug.Log( "End Initialize");
+            });
+            
             Init();
         }
 
@@ -114,6 +124,8 @@ namespace Iridescent.TimeMachine
                 timeMachineClip.isFinishOnEnd = false;
                 timeMachineClip.mute = false;
             }
+            
+            onInitialize.Invoke();
         }
 
         
@@ -135,9 +147,9 @@ namespace Iridescent.TimeMachine
 
         public void ResetTimeline()
         {
-            if (OnInit != null) OnInit.Invoke();
             
             timeMachineControlTrack.Initialize();
+            onInitialize.Invoke();
         }
 
    
@@ -145,10 +157,7 @@ namespace Iridescent.TimeMachine
         {
         }
 
-        public void MoveNextClip()
-        {
-            MoveClip(currentClipCount + 1);
-        }
+      
 
         public void Play()
         {

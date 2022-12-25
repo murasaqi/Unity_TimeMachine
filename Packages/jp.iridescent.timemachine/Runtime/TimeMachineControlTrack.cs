@@ -14,12 +14,14 @@ namespace Iridescent.TimeMachine
     {
 
         private ScriptPlayable<TimeMachineControlMixer> mixer;
-        public bool muteInEditeMode = false;
+     
         public TimeMachineControlMixer timeMachineControlMixer
         {
             get { return mixer.GetBehaviour(); }
         }
 
+        
+        private Dictionary<string,TimelineClip> allClips = new Dictionary<string, TimelineClip>();
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
             mixer = ScriptPlayable<TimeMachineControlMixer>.Create(graph, inputCount);
@@ -28,6 +30,9 @@ namespace Iridescent.TimeMachine
             mixer.GetBehaviour().initialized = false;
             mixer.GetBehaviour().timeMachineControlTrack = this;
 
+            var director = go.GetComponent<PlayableDirector>();
+            
+            
             if (m_Clips != null)
             {
                 foreach (var clip in m_Clips)
@@ -37,6 +42,7 @@ namespace Iridescent.TimeMachine
                     
                     timeMachineCLip.clipIndex = m_Clips.IndexOf(clip);
                     timeMachineCLip.mixer = mixer.GetBehaviour();
+                    timeMachineCLip.director = director;
                 }
             }
             return mixer;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,17 +19,15 @@ namespace Iridescent.TimeMachine
         [SerializeField] public TimeMachineClipEvent onClipStartAction = TimeMachineClipEvent.THOROUGH;
         [SerializeField] public TimeMachineClipEvent onClipEndAction = TimeMachineClipEvent.THOROUGH;
        
-        public bool isFireOnClipStart =false;
-        public bool isFireOnClipEnd = false;
+        internal bool isFireOnClipStart =false;
+        internal bool isFireOnClipEnd = false;
         [SerializeField] public bool isFinishOnStart = false;
         [SerializeField] public bool isFinishOnEnd = false;
-        [SerializeField, ] public int clipIndex= 0;
+        [SerializeField] public int clipIndex= 0;
         
         
         public bool isSyncClip = false;
-        public TimelineAsset syncTimelineAsset;
-        public string syncTrackTargetName = null;
-        public string syncClipTargetName = null;
+        // public Dictionary<string, TimelineClip> allClipDict = new Dictionary<string, TimelineClip>();
         public TimelineClip syncClip = null;
         
         public ClipCaps clipCaps
@@ -37,20 +36,28 @@ namespace Iridescent.TimeMachine
         }
         private TimeMachineControlBehaviour behaviour;
         public TimeMachineControlMixer mixer;
+        public PlayableDirector director;
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
             var playable = ScriptPlayable<TimeMachineControlBehaviour>.Create(graph, timeMachineControlBehaviour);
             behaviour = playable.GetBehaviour();
 
             
-            FindSyncClip();
-
-            // if (sectionName == null || sectionName == "")
+            // var tracks = (director.playableAsset as TimelineAsset).GetOutputTracks().ToList();
+            // foreach (var track in tracks)
             // {
-            //     sectionName = "Section_"+clipIndex;
-            //     // CheckSameSectionName();
+            //     var clips = track.GetClips().ToList();
+            //     foreach (var clip in clips)
+            //     {
+            //         if (clip.GetType() != typeof(TimeMachineControlClip))
+            //         {
+            //             var selectName = $"{tracks.IndexOf(track)}_{clips.IndexOf(clip)} ({track.GetType()}){clip.displayName}";
+            //             if(!allClipDict.ContainsKey(selectName))allClipDict.Add(selectName, clip);
+            //         }
+            //     }
             // }
-           
+            // FindSyncClip();
+
             return playable;
         }
 
@@ -77,16 +84,16 @@ namespace Iridescent.TimeMachine
         [ContextMenu("FindSyncClip")]
         public void FindSyncClip()
         {
-            if (syncTimelineAsset != null)
-            {
-                var track = syncTimelineAsset.GetOutputTracks().ToList().Find(t=> t.name == syncTrackTargetName);
-                if (track != null)
-                {
-                    var clips = track.GetClips().ToList();
-                    syncClip = clips.Find(c => c.displayName == syncClipTargetName);        
-                }
-            
-            }
+            // if (syncTimelineAsset != null)
+            // {
+            //     var track = syncTimelineAsset.GetOutputTracks().ToList().Find(t=> t.name == syncTrackTargetName);
+            //     if (track != null)
+            //     {
+            //         var clips = track.GetClips().ToList();
+            //         syncClip = clips.Find(c => c.displayName == syncClipTargetName);        
+            //     }
+            //
+            // }
         }
         
         

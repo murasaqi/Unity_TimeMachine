@@ -137,12 +137,10 @@ public class TimeMachineExtOscReceiverEditor : Editor
       
         oscEventListView.bindItem = (element, index) =>
         {
-            Debug.Log(index);
             if(index >= timeMachineExtOscReceiver.timeMachineOscEvents.Count) return;
             var label = element.Q<Label>("clipName");
             var oscEvent = timeMachineExtOscReceiver.timeMachineOscEvents[index];
             
-            Debug.Log($"{oscEvent.clipName} {oscEvent.oscAddress} {oscEvent.oscValue}");
             label.text = oscEvent.clipName;
             var oscAddressField = element.Q<TextField>("oscAddressField");
             oscAddressField.value = oscEvent.oscAddress;

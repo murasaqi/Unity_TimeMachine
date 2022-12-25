@@ -5,7 +5,6 @@ using UnityEditor;
 
 namespace Iridescent.TimeMachine
 {
-
     public sealed class NonEditableAttribute : PropertyAttribute
     {
     }

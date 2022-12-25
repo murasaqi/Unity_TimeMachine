@@ -52,8 +52,11 @@ namespace Iridescent.TimeMachine
                     index++;
                 }
 
+                trackBinding.OnInit -= InitEvents;
                 trackBinding.OnInit += InitEvents;
+                trackBinding.OnForceMoveClip -= ForceMoveClip;
                 trackBinding.OnForceMoveClip += ForceMoveClip;
+                trackBinding.OnNextState -= OnNextState;
                 trackBinding.OnNextState += OnNextState;
                 initialized = true;
             }
@@ -73,10 +76,7 @@ namespace Iridescent.TimeMachine
                 if(timeMachineControlClip == null) continue;
                 if (timeMachineControlClip.isSyncClip)
                 {
-                    if (timeMachineControlClip.syncTimelineAsset != null &&
-                        timeMachineControlClip.syncClipTargetName != "" &&
-                        timeMachineControlClip.syncClipTargetName != "" && 
-                        timeMachineControlClip.syncClip.asset != null &&
+                    if (timeMachineControlClip.syncClip.asset != null &&
                         syncClips.Find(c => c ==timeMachineControlClip.syncClip) == null)
                     {
                         clip.start = timeMachineControlClip.syncClip.start;
@@ -88,11 +88,9 @@ namespace Iridescent.TimeMachine
                         timeMachineControlClip.isSyncClip = false;
                     }
                     
-                    // clip.end = timeMachineControlClip.syncClip.end;
                 }
             }
 
-            // Initialize and Fire on ClipStartEvent or ClipEndEvent
             foreach (var clip in clips)
             {
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
@@ -101,7 +99,7 @@ namespace Iridescent.TimeMachine
                 {
                     if (!timeMachineControlClip.isFireOnClipStart)
                     {
-                        // timeMachineControlClip.onClipStartEvent?.Invoke();
+                        trackBinding.onClipStart?.Invoke();
                         timeMachineControlClip.isFireOnClipStart = true;
                     }
                 }
@@ -110,11 +108,11 @@ namespace Iridescent.TimeMachine
                     timeMachineControlClip.isFireOnClipStart = false;
                 }
 
-                if (time >= clip.end - trackBinding.frameDuration)
+                if (time >= clip.end - trackBinding.FramePerSec)
                 {
                     if (!timeMachineControlClip.isFireOnClipEnd)
                     {
-                        // timeMachineControlClip.onClipEndEvent?.Invoke();
+                        trackBinding.onClipEnd?.Invoke();
                         timeMachineControlClip.isFireOnClipEnd = true;
                     }
                 }
@@ -137,10 +135,9 @@ namespace Iridescent.TimeMachine
                 #if UNITY_EDITOR
                 if (!EditorApplication.isPlaying)
                 {
-                    if (timeMachineControlTrack != null && timeMachineControlTrack.muteInEditeMode) isMute = true; 
+                    if (trackBinding.muteInEditMode) isMute = true; 
                 }
                 #endif
-                if (isMute) continue;
 
                 var isFinishOnStart = timeMachineControlClip.isFinishOnStart;
                 var isFinishOnEnd = timeMachineControlClip.isFinishOnEnd;
@@ -148,16 +145,17 @@ namespace Iridescent.TimeMachine
                 var onEndEvent = timeMachineControlClip.onClipEndAction;
 
                 var onClipStartTime = clip.start;
-                var onClipEndTime = clip.end - trackBinding.frameDuration;
+                var onClipEndTime = clip.end - trackBinding.FramePerSec;
 
                 if (clip.start <= time && time < clip.start + clip.duration)
                 {
                     currentInput = input;
                     currentTimelineClip = clip;
-                    currentInputIndex = i;
-                    trackBinding.currentClipCount = currentInputIndex;
-
+                    currentInputIndex = clips.IndexOf(clip);
+                    trackBinding.currentClipCount = clips.IndexOf(clip);
                 }
+                
+                if (isMute) continue;
 
                 if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.THOROUGH)
                 {
@@ -223,7 +221,7 @@ namespace Iridescent.TimeMachine
                     if (playableDirector.state == PlayState.Playing) playableDirector.time = clip.start;
                     break;
                 }
-                i++;
+              
 
             }
 
@@ -270,8 +268,7 @@ namespace Iridescent.TimeMachine
         }
         public void FinishRole(int index, bool finishOnClipStart = true, bool finishOnClipEnd = true)
         {
-            // if(clips.Count <=index  && index < 0) return;
-            
+
             var i = 0;
             foreach (var c in clips)
             {
@@ -293,21 +290,10 @@ namespace Iridescent.TimeMachine
                 }
                 i++;
             }
-
-            // i = 0;
-            // foreach (var c in clips)
-            // {
-            //     // Debug.Log($"{c.displayName},{(c.asset as TimeMachineControlClip).isFinishOnStart},{(c.asset as TimeMachineControlClip).isFinishOnEnd}");
-            //     i++;
-            // }
-
-            
         }
 
         public void OnNextState()
-
         {
-            // currentInput.isFinishRole = true;
             playableDirector.time = clips[currentInputIndex].end;
 
         }
