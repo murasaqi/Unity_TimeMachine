@@ -15,13 +15,13 @@ using extOSC;
 #endif
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(TimeMachineUOscReceiver))]
+[CustomEditor(typeof(TimeMachineOscReceiver))]
 [CanEditMultipleObjects]
 public class TimeMachineOscReceiverEditor: Editor
 {
     public override void OnInspectorGUI()
     {
-        TimeMachineUOscReceiver timeMachineOscReceiver = (TimeMachineUOscReceiver)target;
+        TimeMachineOscReceiver timeMachineOscReceiver = (TimeMachineOscReceiver)target;
         
         // change check
         EditorGUI.BeginChangeCheck();
@@ -70,7 +70,7 @@ public class TimeMachineOscReceiverEditor: Editor
 #endif
 
 
-public class TimeMachineUOscReceiver : MonoBehaviour
+public class TimeMachineOscReceiver : MonoBehaviour
 {
 #if USE_UOSC
     public uOscServer uOscServer;
@@ -84,7 +84,7 @@ public class TimeMachineUOscReceiver : MonoBehaviour
     public string moveSectionAddressPrefix = "/TimeMachine/MoveTo";
     public List<TimeMachineOscMoveScetionEvent> timeMachineOscMoveSectionEvents = new List<TimeMachineOscMoveScetionEvent>();
     
-    [Header("---  Move Section Event  ---")]
+    [Header("---  TimeMachine Player Event  ---")]
     public string playerEventAddressPrefix = "/TimeMachine/Player";
     public List<TimeMachineOscPlayerOscEvent> timeMachineOscPlayerEvents = new List<TimeMachineOscPlayerOscEvent>();
 

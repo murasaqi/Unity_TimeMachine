@@ -10,7 +10,7 @@ public class TimeMachineOscDebugUI : MonoBehaviour
 
     public GameObject buttonPrefab;
     public OSCTransmitter oscTransmitter;
-    public TimeMachineUOscReceiver timeMachineOscReceiver;
+    public TimeMachineOscReceiver timeMachineOscReceiver;
     // Start is called before the first frame update
     void Start()
     {

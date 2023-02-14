@@ -68,16 +68,16 @@ namespace Iridescent.TimeMachine
         {
             onClipStart.AddListener(() =>
             {
-                Debug.Log( "Clip Start");
+                // Debug.Log( "Clip Start");
             });
             
             onClipEnd.AddListener(() =>
             {
-                Debug.Log( "Clip End");
+                // Debug.Log( "Clip End");
             });
             onInitialize.AddListener(() =>
             {
-                Debug.Log( "End Initialize");
+                // Debug.Log( "End Initialize");
             });
             
             Init();
