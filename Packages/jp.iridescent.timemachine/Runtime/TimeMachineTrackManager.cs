@@ -9,17 +9,7 @@ using UnityEngine.Timeline;
 
 namespace Iridescent.TimeMachine
 {
-    // [Serializable]
-    // public struct TimeMachineControlClipValue
-    // {
-    //     public int index;
-    //     public TimeMachineClipEvent clipEvent;
-    //     public string name;
-    //     public double duration;
-    //     public double start;
-    // }
-
-
+    
     [Serializable]
     public enum TimeMachineClipEvent
     {
@@ -30,16 +20,14 @@ namespace Iridescent.TimeMachine
     }
     
    
-
-//[RequireComponent(typeof(Canvas))]
-// [RequireComponent(typeof(PlayableDirector))]
-// [ExecuteInEditMode] 
+    
 [ExecuteAlways]
 
     public class TimeMachineTrackManager : MonoBehaviour
     {
         [SerializeField] public PlayableDirector playableDirector;
-        [SerializeField] public List<TimelineClip> clips;
+        public bool muteInEditMode = false;
+        internal List<TimelineClip> clips;
 
         public delegate void NextStateHandler();
 
@@ -54,21 +42,16 @@ namespace Iridescent.TimeMachine
         public event ForceMoveClip OnForceMoveClip;
 
 
-        public UnityEvent onEndInitialize;
+        public UnityEvent onInitialize;
+        public UnityEvent onClipStart;
+        public UnityEvent onClipEnd;
         public int currentClipCount = 0;
         private TimelineAsset timelineAsset;
 
         private TimeMachineControlTrack timeMachineControlTrack;
-        // [SerializeField] public bool initialized;
+        
 
-        public PlayState state => playableDirector.state;
-
-        public int clipCount
-        {
-            get => transform.childCount;
-        }
-
-        public double frameDuration
+        public double FramePerSec
         {
             get
             {
@@ -83,6 +66,20 @@ namespace Iridescent.TimeMachine
 
         private void Start()
         {
+            onClipStart.AddListener(() =>
+            {
+                Debug.Log( "Clip Start");
+            });
+            
+            onClipEnd.AddListener(() =>
+            {
+                Debug.Log( "Clip End");
+            });
+            onInitialize.AddListener(() =>
+            {
+                Debug.Log( "End Initialize");
+            });
+            
             Init();
         }
 
@@ -127,8 +124,22 @@ namespace Iridescent.TimeMachine
                 timeMachineClip.isFinishOnEnd = false;
                 timeMachineClip.mute = false;
             }
+            
+            onInitialize.Invoke();
         }
 
+        
+        public List<TimeMachineControlClip> GetTimeMachineControlClips()
+        {
+            if(clips== null) return null;
+            List<TimeMachineControlClip> timeMachineControlClips = new List<TimeMachineControlClip>();
+            foreach (var clip in clips)
+            {
+                timeMachineControlClips.Add(clip.asset as TimeMachineControlClip);
+            }
+
+            return timeMachineControlClips;
+        }
         public void EnableClickButton()
         {
 
@@ -136,9 +147,9 @@ namespace Iridescent.TimeMachine
 
         public void ResetTimeline()
         {
-            if (OnInit != null) OnInit.Invoke();
             
             timeMachineControlTrack.Initialize();
+            onInitialize.Invoke();
         }
 
    
@@ -146,10 +157,7 @@ namespace Iridescent.TimeMachine
         {
         }
 
-        public void MoveNextClip()
-        {
-            MoveClip(currentClipCount + 1);
-        }
+      
 
         public void Play()
         {
@@ -197,11 +205,26 @@ namespace Iridescent.TimeMachine
 
         public void MoveClip(int index)
         {
+            if (playableDirector.state != PlayState.Playing)
+            {
+                playableDirector.Play();
+            }
             var i = Mathf.Clamp(index, 0, timeMachineControlTrack.GetClips().Count());
             timeMachineControlTrack.ForceMoveClip(i);
         }
 
-        public void FinishCurrentClip()
+        public void MoveClip(string sectionName)
+        {
+
+            if (playableDirector.state != PlayState.Playing)
+            {
+                playableDirector.Play();
+            }
+            timeMachineControlTrack.ForceMoveClip(sectionName);
+
+        }
+
+        public void FinishRole()
         {
             Debug.Log("finish current clip");
             timeMachineControlTrack.FinishRoleCurrentClip();
