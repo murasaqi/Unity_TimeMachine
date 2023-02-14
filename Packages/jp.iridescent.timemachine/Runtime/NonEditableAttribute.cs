@@ -1,29 +1,25 @@
+
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
-namespace Iridescent.TimeMachine
-{
-    public sealed class NonEditableAttribute : PropertyAttribute
-    {
-    }
-
+ 
+public sealed class NonEditableAttribute : PropertyAttribute{}
+ 
 #if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(NonEditableAttribute))]
-    public sealed class NonEditableAttributeDrawer : PropertyDrawer
+[CustomPropertyDrawer( typeof(NonEditableAttribute) )]
+public sealed class NonEditableAttributeDrawer : PropertyDrawer
+{
+    public override float GetPropertyHeight ( SerializedProperty property, GUIContent label )
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return EditorGUI.GetPropertyHeight(property, label, true);
-        }
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            GUI.enabled = false;
-            EditorGUI.PropertyField(position, property, label, true);
-            GUI.enabled = true;
-        }
+        return EditorGUI.GetPropertyHeight( property, label, true );
+    }
+ 
+    public override void OnGUI ( Rect position, SerializedProperty property, GUIContent label )
+    {
+        GUI.enabled = false;
+        EditorGUI.PropertyField( position, property, label, true );
+        GUI.enabled = true;
     }
 }
 #endif
