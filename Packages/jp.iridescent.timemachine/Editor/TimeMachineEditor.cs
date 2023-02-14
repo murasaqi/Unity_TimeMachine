@@ -47,6 +47,8 @@ namespace Iridescent.TimeMachine
                 var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks().ToList();
                 foreach (var track in tracks)
                 {
+                    if(track.GetType() == typeof(TimeMachineControlTrack)) continue;
+                    
                     var clips = track.GetClips().ToList();
                     foreach (var clip in clips)
                     {
