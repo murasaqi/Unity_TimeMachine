@@ -38,8 +38,8 @@ namespace Iridescent.TimeMachine
                 foreach (var clip in m_Clips)
                 {
                     var timeMachineCLip = clip.asset as TimeMachineControlClip;
-                    clip.displayName = timeMachineCLip.sectionName;
-                    
+                    // clip.displayName = timeMachineCLip.sectionName;
+                    if(timeMachineCLip == null) continue;
                     timeMachineCLip.clipIndex = m_Clips.IndexOf(clip);
                     timeMachineCLip.mixer = mixer.GetBehaviour();
                     timeMachineCLip.director = director;

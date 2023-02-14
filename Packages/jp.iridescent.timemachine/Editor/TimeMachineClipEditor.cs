@@ -75,9 +75,8 @@ namespace Iridescent.TimeMachine
 
             timeMachineControlClip.clipIndex = timeMachineControlClip.mixer.clips.IndexOf(clip);
             
-            clip.displayName = sameNameCount == 0 ?  timeMachineControlClip.sectionName: $"{timeMachineControlClip.sectionName} ({sameNameCount})";
-            timeMachineControlClip.sectionName = clip.displayName;
-            
+            timeMachineControlClip.sectionName = sameNameCount == 0 ?  timeMachineControlClip.sectionName: $"{timeMachineControlClip.sectionName} ({sameNameCount})";
+           
             // SetDirty
             EditorUtility.SetDirty(timeMachineControlClip);
             AssetDatabase.SaveAssets();

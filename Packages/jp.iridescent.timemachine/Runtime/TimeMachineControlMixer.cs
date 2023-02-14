@@ -71,9 +71,15 @@ namespace Iridescent.TimeMachine
             {
          
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
-                
+
                 // Debug.Log(timeMachineControlClip.sectionName);       
                 if(timeMachineControlClip == null) continue;
+
+                if (timeMachineControlClip.sectionNameToDisplayName)
+                {
+                    clip.displayName = timeMachineControlClip.sectionName;
+                }
+
                 if (timeMachineControlClip.isSyncClip)
                 {
                     if (timeMachineControlClip.syncClip.asset != null &&

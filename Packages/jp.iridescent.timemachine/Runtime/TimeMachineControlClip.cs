@@ -15,6 +15,7 @@ namespace Iridescent.TimeMachine
 
         [SerializeField, HideInInspector] public TimeMachineControlBehaviour timeMachineControlBehaviour;
         [SerializeField] public string sectionName;
+        [SerializeField] public bool sectionNameToDisplayName = false;
         [SerializeField] public bool mute;
         [SerializeField] public TimeMachineClipEvent onClipStartAction = TimeMachineClipEvent.THOROUGH;
         [SerializeField] public TimeMachineClipEvent onClipEndAction = TimeMachineClipEvent.THOROUGH;
@@ -41,23 +42,6 @@ namespace Iridescent.TimeMachine
         {
             var playable = ScriptPlayable<TimeMachineControlBehaviour>.Create(graph, timeMachineControlBehaviour);
             behaviour = playable.GetBehaviour();
-
-            
-            // var tracks = (director.playableAsset as TimelineAsset).GetOutputTracks().ToList();
-            // foreach (var track in tracks)
-            // {
-            //     var clips = track.GetClips().ToList();
-            //     foreach (var clip in clips)
-            //     {
-            //         if (clip.GetType() != typeof(TimeMachineControlClip))
-            //         {
-            //             var selectName = $"{tracks.IndexOf(track)}_{clips.IndexOf(clip)} ({track.GetType()}){clip.displayName}";
-            //             if(!allClipDict.ContainsKey(selectName))allClipDict.Add(selectName, clip);
-            //         }
-            //     }
-            // }
-            // FindSyncClip();
-
             return playable;
         }
 

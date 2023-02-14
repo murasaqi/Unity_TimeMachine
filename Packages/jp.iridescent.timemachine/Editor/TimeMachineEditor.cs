@@ -19,8 +19,7 @@ namespace Iridescent.TimeMachine
             
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("sectionName"));
-
-
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("sectionNameToDisplayName"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("mute"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("onClipStartAction"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("onClipEndAction"));
