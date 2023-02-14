@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.hecomi.uosc": {
+      "version": "https://github.com/hecomi/uOSC.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3788ab28702c44330bfea7323b2e05bc4d23c213"
+    },
     "com.iam1337.extosc": {
       "version": "file:extOSC",
       "depth": 0,

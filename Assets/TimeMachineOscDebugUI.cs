@@ -10,13 +10,13 @@ public class TimeMachineOscDebugUI : MonoBehaviour
 
     public GameObject buttonPrefab;
     public OSCTransmitter oscTransmitter;
-    public TimeMachineExtOscReceiver timeMachineOscReceiver;
+    public TimeMachineUOscReceiver timeMachineOscReceiver;
     // Start is called before the first frame update
     void Start()
     {
         if (timeMachineOscReceiver != null)
         {
-            foreach (var timeMachineOscEvent in timeMachineOscReceiver.timeMachineOscEvents)
+            foreach (var timeMachineOscEvent in timeMachineOscReceiver.timeMachineOscMoveSectionEvents)
             {
                 var instantiate = Instantiate(buttonPrefab, transform);
                 instantiate.transform.SetParent(transform);

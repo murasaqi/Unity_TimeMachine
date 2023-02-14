@@ -5,26 +5,38 @@ using System.Linq;
 using UnityEngine;
 using Iridescent.TimeMachine;
 using UnityEditor;
+using UnityEngine.Serialization;
 #if USE_UOSC
 using uOSC;
+#endif
 
+#if USE_EXTOSC
+using extOSC;
+#endif
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(TimeMachineUOscReceiver))]
 [CanEditMultipleObjects]
-public class TimeMachineUOscReceiverEditor: Editor
+public class TimeMachineOscReceiverEditor: Editor
 {
     public override void OnInspectorGUI()
     {
-        TimeMachineUOscReceiver timeMachineExtOscReceiver = (TimeMachineUOscReceiver)target;
+        TimeMachineUOscReceiver timeMachineOscReceiver = (TimeMachineUOscReceiver)target;
         
         // change check
         EditorGUI.BeginChangeCheck();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscServer"));
+#if USE_UOSC
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("uOscServer"));
+#endif
+
+#if USE_EXTOSC
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("extOscReceiver"));
+#endif
+        
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
-        var isEnable = timeMachineExtOscReceiver.oscServer != null &&
-                       timeMachineExtOscReceiver.timeMachineTrackManager != null;
+        var isEnable = timeMachineOscReceiver.uOscServer != null &&
+                       timeMachineOscReceiver.timeMachineTrackManager != null;
         
         EditorGUI.BeginDisabledGroup(!isEnable);
         EditorGUILayout.Space();
@@ -34,23 +46,22 @@ public class TimeMachineUOscReceiverEditor: Editor
             EditorGUILayout.Space();
             if (GUILayout.Button("Initialize OSC Events", GUILayout.MaxWidth(200),GUILayout.Height(28)))
             {
-                timeMachineExtOscReceiver.Init();
+                timeMachineOscReceiver.Init();
             }
             EditorGUILayout.Space();
         }
     
-        EditorGUILayout.EndHorizontal(); 
-        EditorGUILayout.Space();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("oscAddressPrefix"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscEvents"));
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("moveSectionAddressPrefix"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscMoveSectionEvents"));
        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("playerEventAddressPrefix"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineOscPlayerEvents"));
         
         EditorGUI.EndDisabledGroup();
 
         if (EditorGUI.EndChangeCheck())
         {
-            
-            // Record undo
             Undo.RecordObject(target, "TimeMachineExtOscReceiver");
             serializedObject.ApplyModifiedProperties();
         }
@@ -61,10 +72,22 @@ public class TimeMachineUOscReceiverEditor: Editor
 
 public class TimeMachineUOscReceiver : MonoBehaviour
 {
-    public string oscAddressPrefix = "/TimeMachine/MoveTo";
+#if USE_UOSC
+    public uOscServer uOscServer;
+#endif
+#if USE_EXTOSC
+    public OSCReceiver extOscReceiver;
+#endif
     public TimeMachineTrackManager timeMachineTrackManager;
-    public List<TimeMachineOscEvent> timeMachineOscEvents = new List<TimeMachineOscEvent>();
-    public uOscServer oscServer;
+    
+    [Header("---  Move Section Event  ---")]
+    public string moveSectionAddressPrefix = "/TimeMachine/MoveTo";
+    public List<TimeMachineOscMoveScetionEvent> timeMachineOscMoveSectionEvents = new List<TimeMachineOscMoveScetionEvent>();
+    
+    [Header("---  Move Section Event  ---")]
+    public string playerEventAddressPrefix = "/TimeMachine/Player";
+    public List<TimeMachineOscPlayerOscEvent> timeMachineOscPlayerEvents = new List<TimeMachineOscPlayerOscEvent>();
+
 
     private void Start()
     {
@@ -74,11 +97,11 @@ public class TimeMachineUOscReceiver : MonoBehaviour
     [ContextMenu("Init")]
     public void Init()
     {
-        if(oscServer == null) return;
+        if(uOscServer == null) return;
         if(timeMachineTrackManager == null) return;
         
-        timeMachineOscEvents.Clear();
-       
+        timeMachineOscMoveSectionEvents.Clear();
+        timeMachineOscPlayerEvents.Clear();
 
         var clips = timeMachineTrackManager.clips;
         
@@ -86,45 +109,123 @@ public class TimeMachineUOscReceiver : MonoBehaviour
         foreach (var clip in clips)
         {
             var timeMachineControlClip = clip.asset as TimeMachineControlClip;
-            timeMachineOscEvents.Add(new TimeMachineOscEvent()
+            timeMachineOscMoveSectionEvents.Add(new TimeMachineOscMoveScetionEvent()
             {
-                oscAddress = oscAddressPrefix+"/C"+timeMachineControlClip.clipIndex,
+                oscAddress = moveSectionAddressPrefix+"/"+timeMachineControlClip.sectionName,
                 clipIndex = timeMachineControlClip.clipIndex,
-                clipName = clip.displayName,
+                sectionName = clip.displayName,
             });
         }
-        timeMachineOscEvents.Add(new TimeMachineOscEvent()
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
         {
-            oscAddress = oscAddressPrefix+"/Finish",
-            clipIndex = -1,
-            clipName = "Finish Current Role"
+            oscAddress = playerEventAddressPrefix+"/FinishCurrentRole",
+            playerEvent = TimeMachinePlayerEventType.FinishCurrentRole,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/ResetAndReplay",
+            playerEvent = TimeMachinePlayerEventType.ResetAndReplay,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/Stop",
+            playerEvent = TimeMachinePlayerEventType.Stop,
         });
         
         
-        timeMachineOscEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
+        timeMachineOscMoveSectionEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
     }
 
     public void Bind()
     {
-        oscServer.onDataReceived.AddListener(OnDataReceived);
-    }
+#if USE_UOSC
+        BinduOscServer();
+#endif
 
-    public void OnDataReceived(Message message)
+#if USE_EXTOSC
+        BindExtOscServer();
+#endif
+    }
+    
+    #if USE_EXTOSC
+    public void BindExtOscServer()
     {
-        foreach (var timeMachineOscEvent in timeMachineOscEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
+        if(extOscReceiver == null) return;
+        foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents)
         {
-            var index = timeMachineOscEvent.clipIndex;
-            if (index == -1)
+            extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
-                timeMachineTrackManager.FinishCurrentClip();
-            }
-            else
+                var sectionName = timeMachineOscEvent.sectionName;
+                timeMachineTrackManager.MoveClip(sectionName);    
+                
+            });
+        }
+        
+        foreach (var timeMachineOscEvent in timeMachineOscPlayerEvents)
+        {
+            extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
-                timeMachineTrackManager.MoveClip(index);    
+                switch (timeMachineOscEvent.playerEvent)
+                {
+                    case TimeMachinePlayerEventType.FinishCurrentRole:
+                        timeMachineTrackManager.FinishRole();
+                        break;
+                    case TimeMachinePlayerEventType.ResetAndReplay:
+                        timeMachineTrackManager.ResetAndReplay();
+                        break;
+                    case TimeMachinePlayerEventType.Stop:
+                        timeMachineTrackManager.Stop();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+            });
+        }
+    }
+    #endif
+    
+#if USE_UOSC
+    
+    public void BinduOscServer()
+    {
+        if(uOscServer == null) return;
+        uOscServer.onDataReceived.AddListener(OnMoveSectionReceived);
+        uOscServer.onDataReceived.AddListener(OnPlayerControlReceived);  
+    }
+    
+#endif
+
+    public void OnMoveSectionReceived(Message message)
+    {
+        foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
+        {
+            var sectionName = timeMachineOscEvent.sectionName;
+            timeMachineTrackManager.MoveClip(sectionName);
+        }
+    }
+    
+    public void OnPlayerControlReceived(Message message)
+    {
+        foreach (var timeMachineOscEvent in timeMachineOscPlayerEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
+        {
+            switch (timeMachineOscEvent.playerEvent)
+            {
+                case TimeMachinePlayerEventType.FinishCurrentRole:
+                    timeMachineTrackManager.FinishRole();
+                    break;
+                case TimeMachinePlayerEventType.ResetAndReplay:
+                    timeMachineTrackManager.ResetAndReplay();
+                    break;
+                case TimeMachinePlayerEventType.Stop:
+                    timeMachineTrackManager.Stop();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
 
 }
 
-#endif
+
