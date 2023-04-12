@@ -35,8 +35,11 @@ public class TimeMachineOscReceiverEditor: Editor
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
-        var isEnable = timeMachineOscReceiver.uOscServer != null &&
-                       timeMachineOscReceiver.timeMachineTrackManager != null;
+        var isEnable =
+#if USE_UOSC
+            timeMachineOscReceiver.uOscServer != null &&
+#endif
+            timeMachineOscReceiver.timeMachineTrackManager != null;
         
         EditorGUI.BeginDisabledGroup(!isEnable);
         EditorGUILayout.Space();
@@ -97,7 +100,9 @@ public class TimeMachineOscReceiver : MonoBehaviour
     [ContextMenu("Init")]
     public void Init()
     {
+#if USE_UOSC
         if(uOscServer == null) return;
+#endif
         if(timeMachineTrackManager == null) return;
         
         timeMachineOscMoveSectionEvents.Clear();
@@ -193,8 +198,6 @@ public class TimeMachineOscReceiver : MonoBehaviour
         uOscServer.onDataReceived.AddListener(OnMoveSectionReceived);
         uOscServer.onDataReceived.AddListener(OnPlayerControlReceived);  
     }
-    
-#endif
 
     public void OnMoveSectionReceived(Message message)
     {
@@ -225,6 +228,8 @@ public class TimeMachineOscReceiver : MonoBehaviour
             }
         }
     }
+    
+#endif
 
 }
 
