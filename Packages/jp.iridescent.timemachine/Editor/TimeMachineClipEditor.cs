@@ -53,33 +53,34 @@ namespace Iridescent.TimeMachine
         public override void OnClipChanged(TimelineClip clip)
         {
         
-            var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
-            if (timeMachineControlClip == null)
-                return;
-
-            if(timeMachineControlClip.mixer == null) return;
-
-            
-            var sameNameCount = 0;
-            foreach (var c in timeMachineControlClip.mixer.clips)
-            {
-               var asset = c.asset as TimeMachineControlClip;
-               if (asset != timeMachineControlClip)
-               {
-                   if (asset.sectionName == timeMachineControlClip.sectionName)
-                   {
-                       sameNameCount++;
-                   }
-               }
-            }
-
-            timeMachineControlClip.clipIndex = timeMachineControlClip.mixer.clips.IndexOf(clip);
-            
-            timeMachineControlClip.sectionName = sameNameCount == 0 ?  timeMachineControlClip.sectionName: $"{timeMachineControlClip.sectionName} ({sameNameCount})";
-           
-            // SetDirty
-            EditorUtility.SetDirty(timeMachineControlClip);
-            AssetDatabase.SaveAssets();
+            // Debug.Log($"{clip.displayName} OnClipChanged");
+            // var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
+            // if (timeMachineControlClip == null)
+            //     return;
+            //
+            // if(timeMachineControlClip.mixer == null) return;
+            //
+            //
+            // var sameNameCount = 0;
+            // foreach (var c in timeMachineControlClip.mixer.clips)
+            // {
+            //    var asset = c.asset as TimeMachineControlClip;
+            //    if (asset != timeMachineControlClip)
+            //    {
+            //        if (asset.sectionName == timeMachineControlClip.sectionName)
+            //        {
+            //            sameNameCount++;
+            //        }
+            //    }
+            // }
+            //
+            // timeMachineControlClip.clipIndex = timeMachineControlClip.mixer.clips.IndexOf(clip);
+            //
+            // timeMachineControlClip.sectionName = sameNameCount == 0 ?  timeMachineControlClip.sectionName: $"{timeMachineControlClip.sectionName} ({sameNameCount})";
+            //
+            // // SetDirty
+            // EditorUtility.SetDirty(timeMachineControlClip);
+            // AssetDatabase.SaveAssets();
 
         }
         public override void OnCreate(TimelineClip clip, TrackAsset track, TimelineClip clonedFrom)

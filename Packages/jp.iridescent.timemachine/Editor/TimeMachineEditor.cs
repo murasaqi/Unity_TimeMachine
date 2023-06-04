@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -11,7 +12,9 @@ namespace Iridescent.TimeMachine
     public class TimeMachineEditor:Editor
     {
         private TimeMachineControlClip timeMachineControlClip;
+        private StringBuilder _stringBuilder = new StringBuilder(); 
         private Dictionary<string,TimelineClip> allClips = new Dictionary<string, TimelineClip>();
+        private List<TimeMachineControlClip> _clips = new List<TimeMachineControlClip>();
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -47,13 +50,20 @@ namespace Iridescent.TimeMachine
                 foreach (var track in tracks)
                 {
                     if(track.GetType() == typeof(TimeMachineControlTrack)) continue;
-                    
                     var clips = track.GetClips().ToList();
                     foreach (var clip in clips)
                     {
                         if (clip.GetType() != typeof(TimeMachineControlClip))
                         {
-                            var selectName = $"{tracks.IndexOf(track)}_{clips.IndexOf(clip)} ({track.GetType()}){clip.displayName}";
+                            _stringBuilder.Clear();
+                            _stringBuilder.Append(tracks.IndexOf(track));
+                            _stringBuilder.Append("_");
+                            _stringBuilder.Append(clips.IndexOf(clip));
+                            _stringBuilder.Append(" (");
+                            _stringBuilder.Append(track.GetType());
+                            _stringBuilder.Append(")");
+                            _stringBuilder.Append(clip.displayName);
+                            var selectName = _stringBuilder.ToString();
                             clipSelectionList.Add(selectName);    
                             if(!allClips.ContainsKey(selectName))allClips.Add(selectName, clip);
                         }
