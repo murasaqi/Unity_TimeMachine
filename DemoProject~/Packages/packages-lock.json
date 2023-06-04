@@ -7,14 +7,6 @@
       "dependencies": {},
       "hash": "3788ab28702c44330bfea7323b2e05bc4d23c213"
     },
-    "com.iam1337.extosc": {
-      "version": "file:extOSC",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0"
-      }
-    },
     "com.unity.burst": {
       "version": "1.6.6",
       "depth": 1,
