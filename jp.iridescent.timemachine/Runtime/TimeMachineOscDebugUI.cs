@@ -1,6 +1,8 @@
+#if USE_EXTOSC
 using System.Collections;
 using System.Collections.Generic;
 using extOSC;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,3 +43,4 @@ public class TimeMachineOscDebugUI : MonoBehaviour
         
     }
 }
+#endif
