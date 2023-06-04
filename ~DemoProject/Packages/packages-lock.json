@@ -179,9 +179,9 @@
       "url": "https://packages.unity.com"
     },
     "jp.iridescent.timemachine": {
-      "version": "file:jp.iridescent.timemachine",
+      "version": "file:../../jp.iridescent.timemachine",
       "depth": 0,
-      "source": "embedded",
+      "source": "local",
       "dependencies": {}
     },
     "com.unity.modules.ai": {
