@@ -14,6 +14,8 @@ namespace Iridescent.TimeMachine
     {
 
         private ScriptPlayable<TimeMachineControlMixer> mixer;
+        // public bool forceClipLayout = false;
+        public float clipMargin = 3f;
      
         public TimeMachineControlMixer timeMachineControlMixer
         {
@@ -104,6 +106,24 @@ namespace Iridescent.TimeMachine
                     }
                 }
             }
+        }
+
+        public void AutoLayoutClips(float marginDuration)
+        {
+            var startDuration = 0d;
+
+            foreach (var clip in m_Clips)
+            {
+                clip.start = startDuration;
+                startDuration += clip.duration + marginDuration;
+            }
+
+#if UNITY_EDITOR
+            // set dirty
+            UnityEditor.EditorUtility.SetDirty(timelineAsset);
+            // save assets
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
 
         public void FinishRole(int index)
