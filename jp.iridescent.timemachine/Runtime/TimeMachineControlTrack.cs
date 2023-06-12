@@ -112,6 +112,8 @@ namespace Iridescent.TimeMachine
         {
             var startDuration = 0d;
 
+            // sort m_Clips by start time
+            m_Clips.Sort((a, b) => a.start.CompareTo(b.start));
             foreach (var clip in m_Clips)
             {
                 clip.start = startDuration;
