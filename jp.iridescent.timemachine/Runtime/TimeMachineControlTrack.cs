@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -143,7 +142,7 @@ namespace Iridescent.TimeMachine
             if (mixer.GetBehaviour() != null) mixer.GetBehaviour().initialized = false;
         }
 
-        public void CreateClipsAccordingTo(string targetTrackName)
+        public void CreateClipsAccordingTo(string targetTrackName, double clipMargin)
         {
             if(string.IsNullOrEmpty(targetTrackName)) return;
 
@@ -154,16 +153,21 @@ namespace Iridescent.TimeMachine
 
             var tracks = this.timelineAsset.GetOutputTracks();
             var targetTrack = tracks.FirstOrDefault(t => t.name == targetTrackName);
-            
-            if(targetTrack == null) return;
+
+            if (targetTrack == null)
+            {
+                Debug.LogWarning("Target track not found");
+                return;
+            }
 
             var targetClips = targetTrack?.GetClips();
-            int i = 0;
-            foreach (var tClip in targetClips)
+            for (int i = 0; i < targetClips.Count(); i++)
             {
+                var tClip = targetClips.ElementAt(i);
                 var clip = this.CreateClip<TimeMachineControlClip>();
                 clip.start = tClip.start;
-                clip.duration = tClip.duration;
+                var d = tClip.duration - clipMargin;
+                clip.duration = d > 0 ? d : 0.1;
                 clip.displayName = tClip.displayName;
                 var tmClip = (TimeMachineControlClip)clip.asset;
                 tmClip.clipIndex = i;

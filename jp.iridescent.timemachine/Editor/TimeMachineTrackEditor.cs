@@ -2,6 +2,8 @@
 #if  UNITY_EDITOR
 
 using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 
 namespace Iridescent.TimeMachine
@@ -35,13 +37,22 @@ namespace Iridescent.TimeMachine
             root.Add(targetTrackNameTextField);
 
             var createButton = new Button();
-            createButton.text = "Auto Create clips";
+            createButton.text = "Auto Create clips with Margin";
+            createButton.tooltip =
+                "Create clips with margin from target track. clip duration is (target clip duration - margin).";
             createButton.clicked += () =>
             {
-                track.CreateClipsAccordingTo(targetTrackNameTextField.value);
+                track.CreateClipsAccordingTo(targetTrackNameTextField.value, track.clipMargin);
             };
             root.Add(createButton);
             
+            // var alignButton = new Button();
+            // alignButton.text = "Align clips of target track";
+            // alignButton.clicked += () =>
+            // {
+            //     track.AlignTargetClips(targetTrackNameTextField.value);
+            // };
+            // root.Add(alignButton);
 
             var button = new Button();
             button.text = "Initialize clips";
