@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -143,5 +143,40 @@ namespace Iridescent.TimeMachine
             if (mixer.GetBehaviour() != null) mixer.GetBehaviour().initialized = false;
         }
 
+        public void CreateClipsAccordingTo(string targetTrackName)
+        {
+            if(string.IsNullOrEmpty(targetTrackName)) return;
+
+            if (GetClips().Count() > 0)
+            {
+                Debug.LogError("Delete all clips before create new clips");
+            }
+
+            var tracks = this.timelineAsset.GetOutputTracks();
+            var targetTrack = tracks.FirstOrDefault(t => t.name == targetTrackName);
+            
+            if(targetTrack == null) return;
+
+            var targetClips = targetTrack?.GetClips();
+            int i = 0;
+            foreach (var tClip in targetClips)
+            {
+                var clip = this.CreateClip<TimeMachineControlClip>();
+                clip.start = tClip.start;
+                clip.duration = tClip.duration;
+                clip.displayName = tClip.displayName;
+                var tmClip = (TimeMachineControlClip)clip.asset;
+                tmClip.clipIndex = i;
+                tmClip.sectionName = clip.displayName;
+                tmClip.onClipEndAction = TimeMachineClipEvent.WAIT;
+                Debug.Log($"created : {tClip.displayName}");
+            }
+#if UNITY_EDITOR
+            // set dirty
+            UnityEditor.EditorUtility.SetDirty(timelineAsset);
+            // save assets
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        }
     }
 }

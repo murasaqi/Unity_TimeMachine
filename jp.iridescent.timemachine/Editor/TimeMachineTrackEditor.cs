@@ -19,9 +19,6 @@ namespace Iridescent.TimeMachine
             // デフォルトのInspector表示を追加
             IMGUIContainer defaultInspector = new IMGUIContainer(() => DrawDefaultInspector());
             root.Add(defaultInspector);
-            
-            
-
 
             
             var layoutButton = new Button();
@@ -32,6 +29,18 @@ namespace Iridescent.TimeMachine
                 track.AutoLayoutClips(track.clipMargin);
             };
             root.Add(layoutButton);
+
+            var targetTrackNameTextField = new TextField();
+            targetTrackNameTextField.label = "Target Track Name";
+            root.Add(targetTrackNameTextField);
+
+            var createButton = new Button();
+            createButton.text = "Auto Create clips";
+            createButton.clicked += () =>
+            {
+                track.CreateClipsAccordingTo(targetTrackNameTextField.value);
+            };
+            root.Add(createButton);
             
 
             var button = new Button();
