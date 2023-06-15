@@ -80,6 +80,8 @@ public class TimeMachineOscReceiver : MonoBehaviour
 #endif
 #if USE_EXTOSC
     public OSCReceiver extOscReceiver;
+    
+    private List<OSCBind> extOscBinds = new List<OSCBind>();
 #endif
     public TimeMachineTrackManager timeMachineTrackManager;
     
@@ -92,6 +94,7 @@ public class TimeMachineOscReceiver : MonoBehaviour
     public List<TimeMachineOscPlayerOscEvent> timeMachineOscPlayerEvents = new List<TimeMachineOscPlayerOscEvent>();
 
 
+    
     private void Start()
     {
         Bind();
@@ -104,7 +107,7 @@ public class TimeMachineOscReceiver : MonoBehaviour
         if(uOscServer == null) return;
 #endif
         if(timeMachineTrackManager == null) return;
-        
+        extOscBinds.Clear();
         timeMachineOscMoveSectionEvents.Clear();
         timeMachineOscPlayerEvents.Clear();
 
@@ -151,41 +154,72 @@ public class TimeMachineOscReceiver : MonoBehaviour
         BindExtOscServer();
 #endif
     }
-    
-    #if USE_EXTOSC
+
+
+    public void Unbind()
+    {
+#if USE_UOSC
+        // UnbinduOscServer();
+#elif USE_EXTOSC
+        
+        // timeMachineOscMoveSectionEvents.Clear();
+        // timeMachineOscPlayerEvents.Clear();
+
+        foreach (var extOscBind in extOscBinds)
+        {
+            // unbind
+            extOscReceiver.Unbind(extOscBind);
+        }
+      
+        
+        // timeMachineOscMoveSectionEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
+
+#endif
+
+    }
+#if USE_EXTOSC
     public void BindExtOscServer()
     {
         if(extOscReceiver == null) return;
         foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents)
         {
-            extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
+            var bind = extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
-                var sectionName = timeMachineOscEvent.sectionName;
-                timeMachineTrackManager.MoveClip(sectionName);    
-                
+                if (timeMachineTrackManager != null)
+                {
+                    var sectionName = timeMachineOscEvent.sectionName;
+                    timeMachineTrackManager.MoveClip(sectionName);
+                }
+
             });
+            extOscBinds.Add(bind);
         }
         
         foreach (var timeMachineOscEvent in timeMachineOscPlayerEvents)
         {
-            extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
+            var bind = extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
-                switch (timeMachineOscEvent.playerEvent)
+                if (timeMachineTrackManager != null)
                 {
-                    case TimeMachinePlayerEventType.FinishCurrentRole:
-                        timeMachineTrackManager.FinishRole();
-                        break;
-                    case TimeMachinePlayerEventType.ResetAndReplay:
-                        timeMachineTrackManager.ResetAndReplay();
-                        break;
-                    case TimeMachinePlayerEventType.Stop:
-                        timeMachineTrackManager.Stop();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    switch (timeMachineOscEvent.playerEvent)
+                    {
+                        case TimeMachinePlayerEventType.FinishCurrentRole:
+                            timeMachineTrackManager.FinishRole();
+                            break;
+                        case TimeMachinePlayerEventType.ResetAndReplay:
+                            timeMachineTrackManager.ResetAndReplay();
+                            break;
+                        case TimeMachinePlayerEventType.Stop:
+                            timeMachineTrackManager.Stop();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
-                
+
             });
+            
+            extOscBinds.Add(bind);
         }
     }
     #endif
@@ -230,6 +264,10 @@ public class TimeMachineOscReceiver : MonoBehaviour
     }
     
 #endif
+    private void OnDestroy()
+    {
+        Unbind();
+    }
 
 }
 
