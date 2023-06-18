@@ -137,7 +137,7 @@ namespace Iridescent.TimeMachine
                 var input = inputPlayable.GetBehaviour();
                 var timeMachineControlClip = clip.asset as TimeMachineControlClip;
                 
-                var isMute = timeMachineControlClip.mute;
+                var isMute = trackBinding.muteAllClip || timeMachineControlClip.mute;
                 #if UNITY_EDITOR
                 if (!EditorApplication.isPlaying)
                 {

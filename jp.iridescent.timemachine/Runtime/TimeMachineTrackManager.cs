@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
@@ -49,8 +51,9 @@ namespace Iridescent.TimeMachine
         private TimelineAsset timelineAsset;
 
         private TimeMachineControlTrack timeMachineControlTrack;
-        
-
+        public TextMeshProUGUI debugTextMesh;
+        public bool muteAllClip = false;
+        private StringBuilder stringBuilder = new StringBuilder();
         public double FramePerSec
         {
             get
@@ -155,6 +158,24 @@ namespace Iridescent.TimeMachine
    
         private void Update()
         {
+            if (debugTextMesh)
+            {
+                stringBuilder.Clear();
+                if (timeMachineControlTrack == null || 
+                    timeMachineControlTrack.timeMachineControlMixer == null ||
+                    timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null)
+                {
+                    return;
+                }
+                var dateTime = TimeSpan.FromSeconds(playableDirector.time);
+                var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip.displayName;
+                stringBuilder.Append($"[{currentClip}]  ");
+                stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
+                stringBuilder.Append(" ");
+                stringBuilder.Append((Mathf.CeilToInt((float)timelineAsset.editorSettings.frameRate * (float) playableDirector.time)));
+                stringBuilder.Append("f  ");
+                debugTextMesh.text = stringBuilder.ToString();
+            }
         }
 
       
