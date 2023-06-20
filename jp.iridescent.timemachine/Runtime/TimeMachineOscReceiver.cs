@@ -107,7 +107,10 @@ public class TimeMachineOscReceiver : MonoBehaviour
         if(uOscServer == null) return;
 #endif
         if(timeMachineTrackManager == null) return;
+#if USE_EXTOSC
+        
         extOscBinds.Clear();
+#endif
         timeMachineOscMoveSectionEvents.Clear();
         timeMachineOscPlayerEvents.Clear();
 
