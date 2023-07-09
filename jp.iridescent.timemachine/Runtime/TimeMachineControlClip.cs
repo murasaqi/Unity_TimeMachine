@@ -25,8 +25,6 @@ namespace Iridescent.TimeMachine
         [SerializeField] public bool isFinishOnStart = false;
         [SerializeField] public bool isFinishOnEnd = false;
         [SerializeField] public int clipIndex= 0;
-        
-        
         public bool isSyncClip = false;
         // public Dictionary<string, TimelineClip> allClipDict = new Dictionary<string, TimelineClip>();
         public TimelineClip syncClip = null;
