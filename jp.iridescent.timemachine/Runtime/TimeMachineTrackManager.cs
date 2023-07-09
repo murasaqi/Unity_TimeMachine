@@ -30,7 +30,10 @@ namespace Iridescent.TimeMachine
         [SerializeField] public PlayableDirector playableDirector;
         public bool muteInEditMode = false;
         internal List<TimelineClip> clips;
-
+        public TimelineClip GetClip(int index)
+        {
+            return clips[index];
+        }
         public delegate void NextStateHandler();
 
         public delegate void InitHandler();
