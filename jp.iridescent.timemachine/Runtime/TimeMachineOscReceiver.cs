@@ -35,6 +35,7 @@ public class TimeMachineOscReceiverEditor: Editor
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("offsetDelay"));
         var isEnable =
 #if USE_UOSC
             timeMachineOscReceiver.uOscServer != null &&
@@ -75,6 +76,10 @@ public class TimeMachineOscReceiverEditor: Editor
 
 public class TimeMachineOscReceiver : MonoBehaviour
 {
+
+    [SerializeField] private float offsetDelay = 0f;
+    
+    private Coroutine offsetDelayCoroutine;
 #if USE_UOSC
     public uOscServer uOscServer;
 #endif
@@ -241,8 +246,28 @@ public class TimeMachineOscReceiver : MonoBehaviour
         foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
         {
             var sectionName = timeMachineOscEvent.sectionName;
-            timeMachineTrackManager.MoveClip(sectionName);
+            
+            if(offsetDelayCoroutine != null) StopCoroutine(offsetDelayCoroutine);
+
+            if (offsetDelay > 0)
+            {
+                offsetDelayCoroutine =  StartCoroutine(DelayMethod(offsetDelay, () =>
+                {
+                    timeMachineTrackManager.MoveClip(sectionName);
+                }));
+            }
+            else
+            {
+                timeMachineTrackManager.MoveClip(sectionName);
+            }
+            // timeMachineTrackManager.MoveClip(sectionName);
         }
+    }
+    
+    private IEnumerator DelayMethod(float waitTime, Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
     }
     
     public void OnPlayerControlReceived(Message message)
