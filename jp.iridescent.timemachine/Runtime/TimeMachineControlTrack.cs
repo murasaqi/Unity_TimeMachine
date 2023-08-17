@@ -82,14 +82,14 @@ namespace Iridescent.TimeMachine
             }
         }
 
-        public void ForceMoveClip(int i)
+        public void ForceMoveClip(int i, float offsetTime = 0f)
         {
             Debug.Log($"move {i}");
             if(mixer.GetBehaviour() == null) return;
-            mixer.GetBehaviour().ForceMoveClip(i);
+            mixer.GetBehaviour().ForceMoveClip(i, offsetTime);
         }
         
-        public void ForceMoveClip(string sectionName)
+        public void ForceMoveClip(string sectionName, float offsetTime = 0f)
         {
             Debug.Log($"move {sectionName}");
             if(mixer.GetBehaviour() == null) return;
@@ -101,7 +101,7 @@ namespace Iridescent.TimeMachine
                 {
                     if (timeMachineControlClip.sectionName == sectionName)
                     {
-                        mixer.GetBehaviour().ForceMoveClip(timeMachineControlClip.clipIndex);
+                        mixer.GetBehaviour().ForceMoveClip(timeMachineControlClip.clipIndex, offsetTime);
                         return;
                     }
                 }
