@@ -15,6 +15,7 @@ using extOSC;
 #endif
 
 #if UNITY_EDITOR
+
 [CustomEditor(typeof(TimeMachineOscReceiver))]
 [CanEditMultipleObjects]
 public class TimeMachineOscReceiverEditor: Editor
@@ -35,6 +36,7 @@ public class TimeMachineOscReceiverEditor: Editor
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("eventDelay"),new GUIContent("Event Delay (sec)"));
         var isEnable =
 #if USE_UOSC
             timeMachineOscReceiver.uOscServer != null &&
@@ -75,6 +77,11 @@ public class TimeMachineOscReceiverEditor: Editor
 
 public class TimeMachineOscReceiver : MonoBehaviour
 {
+
+    [SerializeField] private float eventDelay = 0f;
+    // [SerializeField] private float offsetTime = 0f;
+    
+    private Coroutine offsetDelayCoroutine;
 #if USE_UOSC
     public uOscServer uOscServer;
 #endif
@@ -87,7 +94,7 @@ public class TimeMachineOscReceiver : MonoBehaviour
     
     [Header("---  Move Section Event  ---")]
     public string moveSectionAddressPrefix = "/TimeMachine/MoveTo";
-    public List<TimeMachineOscMoveScetionEvent> timeMachineOscMoveSectionEvents = new List<TimeMachineOscMoveScetionEvent>();
+    public List<TimeMachineOscMoveSectionEvent> timeMachineOscMoveSectionEvents = new List<TimeMachineOscMoveSectionEvent>();
     
     [Header("---  TimeMachine Player Event  ---")]
     public string playerEventAddressPrefix = "/TimeMachine/Player";
@@ -120,7 +127,7 @@ public class TimeMachineOscReceiver : MonoBehaviour
         foreach (var clip in clips)
         {
             var timeMachineControlClip = clip.asset as TimeMachineControlClip;
-            timeMachineOscMoveSectionEvents.Add(new TimeMachineOscMoveScetionEvent()
+            timeMachineOscMoveSectionEvents.Add(new TimeMachineOscMoveSectionEvent()
             {
                 oscAddress = moveSectionAddressPrefix+"/"+timeMachineControlClip.sectionName,
                 clipIndex = timeMachineControlClip.clipIndex,
@@ -238,11 +245,49 @@ public class TimeMachineOscReceiver : MonoBehaviour
 
     public void OnMoveSectionReceived(Message message)
     {
+        
         foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
         {
+
+            var count = 0;
             var sectionName = timeMachineOscEvent.sectionName;
-            timeMachineTrackManager.MoveClip(sectionName);
+            var offsetTime = timeMachineOscEvent.offsetTime;
+            var delay = eventDelay;
+            foreach (var value  in message.values)
+            {
+                if (count == 0)
+                {
+                    delay = Mathf.Max((float) value,0f);
+                }
+                if (count == 1)
+                {
+                    offsetTime = (float) value;
+                }
+                count++;
+            }
+            
+            
+            if(offsetDelayCoroutine != null) StopCoroutine(offsetDelayCoroutine);
+
+            if (delay > 0)
+            {
+                offsetDelayCoroutine =  StartCoroutine(DelayMethod(delay, () =>
+                {
+                    timeMachineTrackManager.MoveClip(sectionName,offsetTime);
+                }));
+            }
+            else if (delay == 0f)
+            {
+                timeMachineTrackManager.MoveClip(sectionName,offsetTime);
+            }
+            // timeMachineTrackManager.MoveClip(sectionName);
         }
+    }
+    
+    private IEnumerator DelayMethod(float waitTime, Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
     }
     
     public void OnPlayerControlReceived(Message message)

@@ -40,7 +40,7 @@ namespace Iridescent.TimeMachine
 
         private bool visible = true;
 
-        public delegate void ForceMoveClip(int index);
+        public delegate void ForceMoveClip(int index, float offsetTime = 0f);
 
         public event NextStateHandler OnNextState;
         public event InitHandler OnInit;
@@ -237,14 +237,14 @@ namespace Iridescent.TimeMachine
             timeMachineControlTrack.ForceMoveClip(i);
         }
 
-        public void MoveClip(string sectionName)
+        public void MoveClip(string sectionName, float offsetTime = 0f)
         {
 
             if (playableDirector.state != PlayState.Playing)
             {
                 playableDirector.Play();
             }
-            timeMachineControlTrack.ForceMoveClip(sectionName);
+            timeMachineControlTrack.ForceMoveClip(sectionName, offsetTime);
 
         }
 

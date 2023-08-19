@@ -10,10 +10,11 @@ public abstract class TimeMachineOscEvent
 }
 
 [Serializable]
-public class TimeMachineOscMoveScetionEvent : TimeMachineOscEvent
+public class TimeMachineOscMoveSectionEvent : TimeMachineOscEvent
 {
     [SerializeField,NonEditable] public int clipIndex;
     [SerializeField,NonEditable] public string sectionName;
+    [SerializeField] public float offsetTime = 0f;
 }
 
 [Serializable]

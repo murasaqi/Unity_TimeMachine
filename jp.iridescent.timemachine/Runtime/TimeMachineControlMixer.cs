@@ -249,13 +249,13 @@ namespace Iridescent.TimeMachine
             }
         }
 
-        public void ForceMoveClip(int index)
+        public void ForceMoveClip(int index, float offsetTime = 0f)
         {
             if(clips.Count == 0 || clips == null) return;
             currentInputIndex = index;
-            Debug.Log($"Force move to {currentInputIndex}");
+            // Debug.Log($"Force move to {currentInputIndex}");
             FinishRole(currentInputIndex,false,false);
-            playableDirector.time = clips[index].start;
+            playableDirector.time = clips[index].start + offsetTime;
         }
 
 
