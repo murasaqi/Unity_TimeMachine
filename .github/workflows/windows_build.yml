@@ -4,6 +4,16 @@ on:
     tags:
       - 'v*'
 jobs:
+  env:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: echo tag name
+        run: |
+          echo "${TAG_NAME}"
+          echo "${{ env.TAG_NAME }}"
   build:
     name: ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
@@ -24,13 +34,6 @@ jobs:
           ref: main
           fetch-depth: 0
           lfs: true
-
-      - name: Get tag
-        id: get-tag
-        run: |
-          TAG=$(echo ${{ github.ref_name }} | sed -e 's/\//\-/g')
-          echo "value=${TAG}" >> $GITHUB_OUTPUT
-
       # Cache
       - name: Cache
         uses: actions/cache@v2
@@ -55,5 +58,5 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: Build-${{ matrix.targetPlatform }}-${{TAG}}
-          path: build/${{TAG}}/${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
