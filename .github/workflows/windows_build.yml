@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "${TAG_NAME}"
           echo "${{ env.TAG_NAME }}"
-          
+
       # Checkout
       - name: Checkout
         uses: actions/checkout@v2
@@ -69,4 +69,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}-${{TAG_NAME}}
-          path: build/${{TAG_NAME}}/${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
