@@ -1,6 +1,7 @@
 ﻿using System;
 using Iridescent.TimeMachine;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public abstract class TimeMachineOscEvent
@@ -14,7 +15,7 @@ public class TimeMachineOscMoveSectionEvent : TimeMachineOscEvent
 {
     [SerializeField,NonEditable] public int clipIndex;
     [SerializeField,NonEditable] public string sectionName;
-    [SerializeField] public float offsetTime = 0f;
+    [FormerlySerializedAs("offsetTime")] [SerializeField] public float preWaitTime = 0f;
 }
 
 [Serializable]
