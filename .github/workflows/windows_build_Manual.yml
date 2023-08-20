@@ -1,4 +1,4 @@
-name: Run the Windows build
+name: Run the Windows build Manual
 on:
   workflow_dispatch: {}
 jobs:
@@ -46,5 +46,5 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: Build-${{ matrix.targetPlatform }}-${{TAG_NAME}}
-          path: build/${{TAG_NAME}}/${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
