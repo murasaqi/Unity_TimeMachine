@@ -23,6 +23,7 @@ jobs:
         projectPath:
           - Unity_TimemachineDemoProject~/
         targetPlatform:
+          - StandaloneWindows
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
     steps:
       # Checkout
@@ -61,8 +62,8 @@ jobs:
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
+          projectPath: ${{ matrix.projectPath }}
           targetPlatform: ${{ matrix.targetPlatform }}
-          unityVersion: 2021.3.29f1
 
       # Upload Build
       - name: Upload Build
