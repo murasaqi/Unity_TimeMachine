@@ -36,7 +36,7 @@ public class TimeMachineOscReceiverEditor: Editor
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("eventDelay"),new GUIContent("Event Delay (sec)"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("globalPreWait"),new GUIContent("Global Pre Wait (sec)"));
         var isEnable =
 #if USE_UOSC
             timeMachineOscReceiver.uOscServer != null &&
@@ -78,7 +78,8 @@ public class TimeMachineOscReceiverEditor: Editor
 public class TimeMachineOscReceiver : MonoBehaviour
 {
 
-    [SerializeField] private float eventDelay = 0f;
+    [SerializeField] private float globalPreWait = 0f;
+    
     // [SerializeField] private float offsetTime = 0f;
     
     private Coroutine offsetDelayCoroutine;
@@ -251,36 +252,32 @@ public class TimeMachineOscReceiver : MonoBehaviour
 
             var count = 0;
             var sectionName = timeMachineOscEvent.sectionName;
-            var offsetTime = timeMachineOscEvent.offsetTime;
-            var delay = eventDelay;
+            // var offsetTime = timeMachineOscEvent.preWaitTime;
+            var totalPreWait = globalPreWait;
             foreach (var value  in message.values)
             {
                 if (count == 0)
                 {
-                    delay = Mathf.Max((float) value,0f);
-                }
-                if (count == 1)
-                {
-                    offsetTime = (float) value;
+                    var floatValue = (float) value;
+                    if(!Single.IsNaN(floatValue)) totalPreWait += floatValue;
                 }
                 count++;
             }
             
-            
             if(offsetDelayCoroutine != null) StopCoroutine(offsetDelayCoroutine);
-
-            if (delay > 0)
+            var coroutineTime = Mathf.Max(totalPreWait,0f);
+            if (coroutineTime > 0)
             {
-                offsetDelayCoroutine =  StartCoroutine(DelayMethod(delay, () =>
+                offsetDelayCoroutine =  StartCoroutine(DelayMethod(coroutineTime, () =>
                 {
-                    timeMachineTrackManager.MoveClip(sectionName,offsetTime);
+                    timeMachineTrackManager.MoveClip(sectionName,0f);
                 }));
             }
-            else if (delay == 0f)
+            else if (coroutineTime == 0f)
             {
+                var offsetTime = totalPreWait < 0f ? Mathf.Abs(totalPreWait) : 0f;
                 timeMachineTrackManager.MoveClip(sectionName,offsetTime);
             }
-            // timeMachineTrackManager.MoveClip(sectionName);
         }
     }
     
