@@ -1,8 +1,5 @@
 name: Run the Windows build
-on:
-  push:
-    tags:
-      - 'v*'
+on: [push, pull_request]
 jobs:
   env:
     runs-on: ubuntu-latest
