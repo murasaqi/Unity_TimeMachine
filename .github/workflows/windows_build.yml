@@ -17,32 +17,19 @@ jobs:
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
     
     steps:
-      - uses: actions/checkout@v3
-      - name: get tag name
-        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: echo tag name
-        run: |
-          echo "${TAG_NAME}"
-          echo "${{ env.TAG_NAME }}"
-
       # Checkout
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: main
           fetch-depth: 0
           lfs: true
 
-      - name: Check tagged branch
+      - name: Get tag
+        id: get-tag
         run: |
-          BRANCHS=$(git branch --contains ${{ github.ref_name }})
-          set -- $BRANCHS
-          for BRANCH in $BRANCHS ; do
-            if [[ "$BRANCH" == "main" ]]; then
-              exit 0
-            fi
-          done
-          exit 1
+          TAG=$(echo ${{ github.ref_name }} | sed -e 's/\//\-/g')
+          echo "value=${TAG}" >> $GITHUB_OUTPUT
 
       # Cache
       - name: Cache
@@ -68,5 +55,5 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: Build-${{ matrix.targetPlatform }}-${{TAG_NAME}}
-          path: build/${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}-${{TAG}}
+          path: build/${{TAG}}/${{ matrix.targetPlatform }}
