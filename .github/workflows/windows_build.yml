@@ -1,5 +1,6 @@
 name: Run the Windows build
-on: [push, pull_request]
+on:
+  [push, pull_request]
 jobs:
   build:
     name: ${{ matrix.targetPlatform }}
@@ -11,7 +12,7 @@ jobs:
           - Unity_TimemachineDemoProject~/
         targetPlatform:
           - StandaloneWindows
-          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneWindows64
     steps:
       # Checkout
       - name: Checkout
@@ -20,6 +21,7 @@ jobs:
           ref: main
           fetch-depth: 0
           lfs: true
+
       # Cache
       - name: Cache
         uses: actions/cache@v3
@@ -42,7 +44,7 @@ jobs:
 
       # Upload Build
       - name: Upload Build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
