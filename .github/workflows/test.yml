@@ -1,0 +1,24 @@
+name: Run EditMode and PlayMode Test
+on:
+  workflow_dispatch: {}
+jobs:
+  test:
+    name: Run EditMode and PlayMode Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out my unity project.
+        uses: actions/checkout@v2
+      - name: Run EditMode and PlayMode Test
+        uses: game-ci/unity-test-runner@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: .
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          unityVersion: 2021.3.29f1
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test results
+          path: artifacts
