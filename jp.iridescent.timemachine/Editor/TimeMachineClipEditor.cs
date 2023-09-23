@@ -24,6 +24,7 @@ namespace Iridescent.TimeMachine
                 loopTexture = Resources.Load<Texture2D>("icon_loop");
                 playTexture = Resources.Load<Texture2D>("icon_play");
                 dotTexture = Resources.Load<Texture2D>("icon_dot");
+                restartTexture = Resources.Load<Texture2D>("icon_restart");
               
             } 
             
@@ -37,6 +38,7 @@ namespace Iridescent.TimeMachine
         private static Texture2D skipTexture;
         private static Texture2D loopTexture;
         private static Texture2D dotTexture;
+        private static Texture2D restartTexture;
         private static Color iconColor = new Color(143f / 255f, 242f / 255f, 216f / 255f);
         public override ClipDrawOptions GetClipOptions(TimelineClip clip)
         {
@@ -134,8 +136,7 @@ namespace Iridescent.TimeMachine
                 onStartIcon = pauseIconTexture;
             }
 
-            
-            
+
             if (timelineClip.onClipEndAction == TimeMachineClipEvent.LOOP)
             {
                 onEndIcon = loopTexture;
