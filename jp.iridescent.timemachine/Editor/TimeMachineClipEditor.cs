@@ -135,6 +135,16 @@ namespace Iridescent.TimeMachine
             {
                 onStartIcon = pauseIconTexture;
             }
+            
+            if (timelineClip.onClipStartAction == TimeMachineClipEvent.RESTART)
+            {
+                onStartIcon = restartTexture;
+            }
+            
+            if (timelineClip.onClipEndAction == TimeMachineClipEvent.RESTART)
+            {
+                onEndIcon = restartTexture;
+            }
 
 
             if (timelineClip.onClipEndAction == TimeMachineClipEvent.LOOP)
