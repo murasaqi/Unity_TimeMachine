@@ -127,11 +127,11 @@ namespace Iridescent.TimeMachine
                     timeMachineControlClip.isFireOnClipEnd = false;
                 }
             }
+            ;
 
-            var i = 0;
-
-            foreach (var clip in clips)
+            for (var i = 0; i < clips.Count; i++)
             {
+                var clip = clips[i];
 
                 var inputPlayable = (ScriptPlayable<TimeMachineControlBehaviour>) playable.GetInput(i);
                 var input = inputPlayable.GetBehaviour();
@@ -233,17 +233,19 @@ namespace Iridescent.TimeMachine
                     time > onClipStartTime)
                 {
                     playableDirector.time = 0f;
+                    InitEvents();
                     break;
-
+                
                 }
-
-
+                
+                
                 if (!isFinishOnEnd && onEndEvent == TimeMachineClipEvent.RESTART &&
                     time >= onClipEndTime)
                 {
                     playableDirector.time = 0f;
+                    InitEvents();
                     break;
-
+                
                 }
               
 

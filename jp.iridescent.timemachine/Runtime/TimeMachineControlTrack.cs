@@ -37,12 +37,13 @@ namespace Iridescent.TimeMachine
             
             if (m_Clips != null)
             {
-                foreach (var clip in m_Clips)
+                var orderedClips = m_Clips.OrderBy(c => c.start).ToList();
+                foreach (var clip in orderedClips)
                 {
                     var timeMachineCLip = clip.asset as TimeMachineControlClip;
                     // clip.displayName = timeMachineCLip.sectionName;
                     if(timeMachineCLip == null) continue;
-                    timeMachineCLip.clipIndex = m_Clips.IndexOf(clip);
+                    timeMachineCLip.clipIndex = orderedClips.IndexOf(clip);
                     timeMachineCLip.mixer = mixer.GetBehaviour();
                     timeMachineCLip.director = director;
                 }
