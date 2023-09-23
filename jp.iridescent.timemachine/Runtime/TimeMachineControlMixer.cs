@@ -227,6 +227,24 @@ namespace Iridescent.TimeMachine
                     if (playableDirector.state == PlayState.Playing) playableDirector.time = clip.start;
                     break;
                 }
+                
+                //  ======================= RESTART ========================= //
+                if (!isFinishOnStart && onStartEvent == TimeMachineClipEvent.RESTART &&
+                    time > onClipStartTime)
+                {
+                    playableDirector.time = 0f;
+                    break;
+
+                }
+
+
+                if (!isFinishOnEnd && onEndEvent == TimeMachineClipEvent.RESTART &&
+                    time >= onClipEndTime)
+                {
+                    playableDirector.time = 0f;
+                    break;
+
+                }
               
 
             }

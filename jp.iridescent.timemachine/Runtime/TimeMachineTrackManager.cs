@@ -18,7 +18,8 @@ namespace Iridescent.TimeMachine
         WAIT,
         LOOP,
         SKIP,
-        THOROUGH
+        THOROUGH,
+        RESTART
     }
     
    
