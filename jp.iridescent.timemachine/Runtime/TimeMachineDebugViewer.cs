@@ -33,6 +33,8 @@ namespace Iridescent.TimeMachine
         private Dictionary<TimelineClip,TextMeshProUGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, TextMeshProUGUI>();
         [SerializeField] private List<RectTransform> buttonRectTransforms = new List<RectTransform>();
 
+        private bool _isPause = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -128,6 +130,25 @@ namespace Iridescent.TimeMachine
             finishButtonTextMeshProUGUI.color = Color.yellow;
             finishButton.transform.SetParent(clipButtonContainer);
             buttonRectTransforms.Add(finishButton.GetComponent<RectTransform>());
+            buttonRectTransforms.Last().sizeDelta = clipButtonSize;
+            
+            var pauseAndPlayButton = Instantiate(buttonPrefab);
+            var pauseAndPlayButtonTextMeshProUGUI =  pauseAndPlayButton.GetComponentInChildren<TextMeshProUGUI>();
+            pauseAndPlayButtonTextMeshProUGUI.text = "Pause and Play";
+            pauseAndPlayButton.onClick.AddListener(() =>
+            {
+                if (_isPause)
+                {
+                    timeMachineTrackManager.Play();
+                }
+                else
+                {
+                    timeMachineTrackManager.Pause();
+                }
+            });
+            pauseAndPlayButtonTextMeshProUGUI.color = Color.yellow;
+            pauseAndPlayButton.transform.SetParent(clipButtonContainer);
+            buttonRectTransforms.Add(pauseAndPlayButton.GetComponent<RectTransform>());
             buttonRectTransforms.Last().sizeDelta = clipButtonSize;
         }
 
