@@ -10,27 +10,29 @@ using UnityEngine.Timeline;
 namespace Iridescent.TimeMachine
 {
     [CustomTimelineEditor(typeof(TimeMachineControlClip))]
-    public class TimeMachineControlClipEditor: ClipEditor
+    public class TimeMachineControlClipEditor : ClipEditor
     {
         [InitializeOnLoad]
         class EditorInitialize
         {
             static EditorInitialize()
             {
-                playableDirector = GetMasterDirector();  
-                pauseIconTexture = Resources.Load<Texture2D>("icon_pause");
-                muteTexture = Resources.Load<Texture2D>("icon_ignore");
-                skipTexture = Resources.Load<Texture2D>("icon_skip");
-                loopTexture = Resources.Load<Texture2D>("icon_loop");
-                playTexture = Resources.Load<Texture2D>("icon_play");
-                dotTexture = Resources.Load<Texture2D>("icon_dot");
-                restartTexture = Resources.Load<Texture2D>("icon_restart");
-              
-            } 
-            
-            static PlayableDirector GetMasterDirector() { return TimelineEditor.masterDirector; }
+                playableDirector = GetMasterDirector();
+                pauseIconTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_pause");
+                muteTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_ignore");
+                skipTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_skip");
+                loopTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_loop");
+                playTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_play");
+                dotTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_dot");
+                restartTexture = Resources.Load<Texture2D>("TimeMachineEditorIcons/icon_restart");
+            }
+
+            static PlayableDirector GetMasterDirector()
+            {
+                return TimelineEditor.masterDirector;
+            }
         }
-     
+
         private static PlayableDirector playableDirector;
         private static Texture2D pauseIconTexture;
         private static Texture2D playTexture;
@@ -40,6 +42,7 @@ namespace Iridescent.TimeMachine
         private static Texture2D dotTexture;
         private static Texture2D restartTexture;
         private static Color iconColor = new Color(143f / 255f, 242f / 255f, 216f / 255f);
+
         public override ClipDrawOptions GetClipOptions(TimelineClip clip)
         {
             return new ClipDrawOptions
@@ -50,11 +53,10 @@ namespace Iridescent.TimeMachine
                 tooltip = "Tooltip"
             };
         }
-        
-        
+
+
         public override void OnClipChanged(TimelineClip clip)
         {
-        
             // Debug.Log($"{clip.displayName} OnClipChanged");
             // var timeMachineControlClip = (TimeMachineControlClip)clip.asset;
             // if (timeMachineControlClip == null)
@@ -83,8 +85,8 @@ namespace Iridescent.TimeMachine
             // // SetDirty
             // EditorUtility.SetDirty(timeMachineControlClip);
             // AssetDatabase.SaveAssets();
-
         }
+
         public override void OnCreate(TimelineClip clip, TrackAsset track, TimelineClip clonedFrom)
         {
             Debug.Log(clonedFrom);
@@ -94,8 +96,6 @@ namespace Iridescent.TimeMachine
                 var clonedTimeMachineControlClip = (TimeMachineControlClip)clonedFrom.asset;
                 timeMachineControlClip.sectionName = clonedTimeMachineControlClip.sectionName + "(clone)";
             }
-            
-
         }
 
 
@@ -104,12 +104,13 @@ namespace Iridescent.TimeMachine
             base.DrawBackground(clip, region);
 
 
-            var timelineClip = (TimeMachineControlClip) clip.asset;
-      
+            var timelineClip = (TimeMachineControlClip)clip.asset;
+
             var iconSize = 12;
             var margin = 2;
-            var onEndIconPosition = new Rect(region.position.width - iconSize - margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
-            var onStartIconPosition = new Rect( margin, region.position.height/2f-iconSize/2f, iconSize, iconSize);
+            var onEndIconPosition = new Rect(region.position.width - iconSize - margin,
+                region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
+            var onStartIconPosition = new Rect(margin, region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
             var alpha = timelineClip.mute ? 0.5f : 1f;
             var color = timelineClip.mute ? Color.white : iconColor;
             var isFinishOnStart = timelineClip.isFinishOnStart;
@@ -120,12 +121,12 @@ namespace Iridescent.TimeMachine
             {
                 onStartIcon = loopTexture;
             }
-            
+
             if (timelineClip.onClipStartAction == TimeMachineClipEvent.SKIP)
             {
                 onStartIcon = skipTexture;
             }
-            
+
             if (timelineClip.onClipStartAction == TimeMachineClipEvent.THOROUGH)
             {
                 onStartIcon = playTexture;
@@ -135,12 +136,12 @@ namespace Iridescent.TimeMachine
             {
                 onStartIcon = pauseIconTexture;
             }
-            
+
             if (timelineClip.onClipStartAction == TimeMachineClipEvent.RESTART)
             {
                 onStartIcon = restartTexture;
             }
-            
+
             if (timelineClip.onClipEndAction == TimeMachineClipEvent.RESTART)
             {
                 onEndIcon = restartTexture;
@@ -151,12 +152,12 @@ namespace Iridescent.TimeMachine
             {
                 onEndIcon = loopTexture;
             }
-            
+
             if (timelineClip.onClipEndAction == TimeMachineClipEvent.SKIP)
             {
                 onEndIcon = skipTexture;
             }
-            
+
             if (timelineClip.onClipEndAction == TimeMachineClipEvent.THOROUGH)
             {
                 onEndIcon = playTexture;
@@ -166,34 +167,36 @@ namespace Iridescent.TimeMachine
             {
                 onEndIcon = pauseIconTexture;
             }
+
             if (timelineClip.mute)
             {
                 onStartIcon = muteTexture;
                 onEndIcon = muteTexture;
             }
-           
-            
-            if(onStartIcon){
+
+
+            if (onStartIcon)
+            {
                 GUI.DrawTexture(onStartIconPosition,
-                onStartIcon, ScaleMode.ScaleAndCrop,
-                true,
-                0,
-                timelineClip.isFinishOnStart ? new Color(1,1,1,0.5f): iconColor, 0, 0);}
-            
-            if(onEndIcon){
-                GUI.DrawTexture(onEndIconPosition,
-                onEndIcon, ScaleMode.ScaleAndCrop,
-                true,
-                0,
-                timelineClip.isFinishOnEnd ? new Color(1,1,1,0.5f): iconColor, 0, 0);
-                
+                    onStartIcon, ScaleMode.ScaleAndCrop,
+                    true,
+                    0,
+                    timelineClip.isFinishOnStart ? new Color(1, 1, 1, 0.5f) : iconColor, 0, 0);
             }
-            
+
+            if (onEndIcon)
+            {
+                GUI.DrawTexture(onEndIconPosition,
+                    onEndIcon, ScaleMode.ScaleAndCrop,
+                    true,
+                    0,
+                    timelineClip.isFinishOnEnd ? new Color(1, 1, 1, 0.5f) : iconColor, 0, 0);
+            }
         }
 
-     
 
-        public override void GetSubTimelines(TimelineClip clip, PlayableDirector director, List<PlayableDirector> subTimelines)
+        public override void GetSubTimelines(TimelineClip clip, PlayableDirector director,
+            List<PlayableDirector> subTimelines)
         {
             base.GetSubTimelines(clip, director, subTimelines);
         }
