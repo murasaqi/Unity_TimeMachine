@@ -178,13 +178,13 @@ namespace Iridescent.TimeMachine
                 stringBuilder.Clear();
                 if (timeMachineControlTrack == null ||
                     timeMachineControlTrack.timeMachineControlMixer == null ||
-                    timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null)
+                    timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip == null)
                 {
                     return;
                 }
 
                 var dateTime = TimeSpan.FromSeconds(playableDirector.time);
-                var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip.displayName;
+                var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip.displayName;
                 stringBuilder.Append($"[{currentClip}]  ");
                 stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
                 stringBuilder.Append(" ");
@@ -241,6 +241,26 @@ namespace Iridescent.TimeMachine
         {
         }
 
+        public TimelineClip GetCurrentClip()
+        {
+            return timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
+        }
+        
+        public int GetCurrentClipIndex()
+        {
+            return currentClipCount;
+        }
+        
+        public string GetCurrentClipSectionName()
+        {
+            var timeMachineClip = GetCurrentClip().asset as TimeMachineControlClip;
+            return timeMachineClip.sectionName;
+        }
+        public void SeekTo(float time)
+        {
+            timeMachineControlTrack.timeMachineControlMixer.SeekTo(time);
+        }
+
         public void MoveClip(int index)
         {
             if (playableDirector.state != PlayState.Playing)
@@ -251,6 +271,7 @@ namespace Iridescent.TimeMachine
             var i = Mathf.Clamp(index, 0, timeMachineControlTrack.GetClips().Count());
             timeMachineControlTrack.ForceMoveClip(i);
         }
+
 
         public void MoveClip(string sectionName, float offsetTime = 0f)
         {

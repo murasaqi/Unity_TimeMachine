@@ -206,7 +206,7 @@ namespace Iridescent.TimeMachine
             // stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)));
             // stringBuilder.Append("f  ");
             // stringBuilder.Append($"clip: {clipName}");
-            var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip;
+            var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
             foreach (var f in format)
@@ -249,8 +249,8 @@ namespace Iridescent.TimeMachine
             
             
             if(timeMachineControlTrack.timeMachineControlMixer == null) return;
-            if(timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip == null) return;
-            var currentClip = timeMachineControlTrack.timeMachineControlMixer.GetCurrentTimelineClip;
+            if(timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip == null) return;
+            var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             if(timeMachineControlClip == null) return;
             

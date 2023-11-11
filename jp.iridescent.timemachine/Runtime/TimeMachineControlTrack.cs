@@ -109,6 +109,13 @@ namespace Iridescent.TimeMachine
             }
         }
 
+        public void FinishRole(int index)
+        {
+            mixer.GetBehaviour().FinishRole(index);
+        }
+
+      
+
         public void AutoLayoutClips(float marginDuration)
         {
             var startDuration = 0d;
@@ -129,11 +136,7 @@ namespace Iridescent.TimeMachine
 #endif
         }
 
-        public void FinishRole(int index)
-        {
-            mixer.GetBehaviour().FinishRole(index);
-        }
-
+       
         
         public void FinishRoleCurrentClip()
         {

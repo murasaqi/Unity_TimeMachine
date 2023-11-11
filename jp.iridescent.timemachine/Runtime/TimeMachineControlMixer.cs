@@ -23,7 +23,7 @@ namespace Iridescent.TimeMachine
         private int currentInputIndex = 0;
         public int GetCurrentInputIndex => currentInputIndex;
         // public TimeMachineControlClip GetCurrentClip => currentClip;
-        public TimelineClip GetCurrentTimelineClip => currentTimelineClip;
+        public TimelineClip CurrentTimelineClip => currentTimelineClip;
         public TimeMachineTrackManager timeMachineTrackManager => trackBinding;
 
         public override void OnPlayableCreate(Playable playable)
@@ -278,6 +278,34 @@ namespace Iridescent.TimeMachine
             playableDirector.time = clips[index].start + offsetTime;
         }
 
+        public void SeekTo(float time)
+        {
+
+            var i = 0;
+            foreach (var timelineClip in clips)
+            {
+                var timeMachineClip = timelineClip.asset as TimeMachineControlClip;
+                if (timelineClip.end < time)
+                {
+                    timeMachineClip.isFinishOnStart = true;
+                    timeMachineClip.isFinishOnEnd = true;
+                }else if (timelineClip.start <= time && time < timelineClip.end)
+                {
+                    timeMachineClip.isFinishOnStart = true;
+                    timeMachineClip.isFinishOnEnd = false;
+
+                }else
+                if( timelineClip.start > time)
+                {
+                    timeMachineClip.isFinishOnStart = false;
+                    timeMachineClip.isFinishOnEnd = false;
+                }
+
+
+                i++;
+            }
+            playableDirector.time = time;
+        }
 
         public void FinishCurrentRole()
         {
