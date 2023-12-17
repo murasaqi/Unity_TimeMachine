@@ -162,9 +162,10 @@ namespace Iridescent.TimeMachine
 
         private void DestroyButtons()
         {
+            if(clipButtonContainer == null || clipButtonContainer.childCount == 0) return;
             for (int i =clipButtonContainer.childCount-1 ; i >= 0; i--)
             {
-                DestroyImmediate(clipButtonContainer.GetChild(i).gameObject);
+                if(clipButtonContainer.GetChild(i) != null && clipButtonContainer.GetChild(i).gameObject != null)DestroyImmediate(clipButtonContainer.GetChild(i).gameObject);
             }
             
             clipButtonTextDictionary.Clear();
