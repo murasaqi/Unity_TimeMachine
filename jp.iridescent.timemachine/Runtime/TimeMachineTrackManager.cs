@@ -56,6 +56,7 @@ namespace Iridescent.TimeMachine
 
         [FormerlySerializedAs("forceUnMuteTimeMachineTrackOnAwake")] [SerializeField]
         private bool unMuteTrackOnStart = false;
+        [SerializeField] private bool unMuteTrackOnBuild = true;
 
         private TimeMachineControlTrack timeMachineControlTrack;
         public TextMeshProUGUI debugTextMesh;
@@ -69,6 +70,16 @@ namespace Iridescent.TimeMachine
                 if (timelineAsset == null) timelineAsset = playableDirector.playableAsset as TimelineAsset;
                 return timelineAsset ? 1d / timelineAsset.editorSettings.frameRate : 0;
             }
+        }
+        
+        public void EnableTimeMachineControlTrack()
+        {
+            if (timeMachineControlTrack != null) timeMachineControlTrack.muted = false;
+        }
+        
+        public void DisableTimeMachineControlTrack()
+        {
+            if (timeMachineControlTrack != null) timeMachineControlTrack.muted = true;
         }
 
         private void OnValidate()
@@ -133,6 +144,7 @@ namespace Iridescent.TimeMachine
                     {
                         if (timeMachineControlTrack != null) timeMachineControlTrack.muted = false;
                     }
+                   
                 }
             }
 
@@ -192,6 +204,11 @@ namespace Iridescent.TimeMachine
                                                       (float)playableDirector.time)));
                 stringBuilder.Append("f  ");
                 debugTextMesh.text = stringBuilder.ToString();
+            }
+            
+            if( unMuteTrackOnBuild && !Application.isEditor)
+            {
+                if (timeMachineControlTrack != null && timeMachineControlTrack.muted) timeMachineControlTrack.muted = false;
             }
         }
 
