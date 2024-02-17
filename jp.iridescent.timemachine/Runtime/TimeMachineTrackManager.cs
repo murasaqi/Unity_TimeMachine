@@ -72,12 +72,12 @@ namespace Iridescent.TimeMachine
             }
         }
         
-        public void EnableTimeMachineControlTrack()
+        public void MuteTimeMachineControlTrack()
         {
             if (timeMachineControlTrack != null) timeMachineControlTrack.muted = false;
         }
         
-        public void DisableTimeMachineControlTrack()
+        public void UnMuteTimeMachineControlTrack()
         {
             if (timeMachineControlTrack != null) timeMachineControlTrack.muted = true;
         }
