@@ -108,13 +108,7 @@ namespace Iridescent.TimeMachine
 
             var iconSize = 12;
             var margin = 2;
-            var onEndIconPosition = new Rect(region.position.width - iconSize - margin,
-                region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
-            var onStartIconPosition = new Rect(margin, region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
-            var alpha = timelineClip.mute ? 0.5f : 1f;
-            var color = timelineClip.mute ? Color.white : iconColor;
-            var isFinishOnStart = timelineClip.isFinishOnStart;
-            var isFinishOnEnd = timelineClip.isFinishOnEnd;
+           
             Texture2D onStartIcon = null;
             Texture2D onEndIcon = null;
             if (timelineClip.onClipStartAction == TimeMachineClipEvent.LOOP)
@@ -173,11 +167,17 @@ namespace Iridescent.TimeMachine
                 onStartIcon = muteTexture;
                 onEndIcon = muteTexture;
             }
-
-
+            var duration = region.endTime - region.startTime;
+            var width = (float)(region.position.width * clip.duration / duration);
+            var left = Mathf.Max((float)clip.clipIn, (float)region.startTime);
+            var offset = (float)(region.position.width * left / duration);
+            var start = region.position.x - offset;
+            // var onEndIconPosition = new Rect(region.position.width - iconSize - margin,
+                // region.position.height / 2f - iconSize / 2f, iconSize, iconSize);
+            // Debug.Log($"left:{left}, offset:{offset}, width:{width}, start:{start}, onEndIconPosition:{region.position.width - iconSize - margin}");
             if (onStartIcon)
             {
-                GUI.DrawTexture(onStartIconPosition,
+                GUI.DrawTexture(new Rect(start+margin,region.position.height / 2f - iconSize / 2f, iconSize, iconSize),
                     onStartIcon, ScaleMode.ScaleAndCrop,
                     true,
                     0,
@@ -186,7 +186,7 @@ namespace Iridescent.TimeMachine
 
             if (onEndIcon)
             {
-                GUI.DrawTexture(onEndIconPosition,
+                GUI.DrawTexture(new Rect(start+width-margin-iconSize,region.position.height / 2f - iconSize / 2f, iconSize, iconSize),
                     onEndIcon, ScaleMode.ScaleAndCrop,
                     true,
                     0,
