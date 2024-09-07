@@ -1,5 +1,5 @@
 # Unity_TimeMachine
-![Overview](https://github.com/murasaqi/Unity_TimeMachine/images/demo.gif)
+![Overview](https://github.com/murasaqi/Unity_TimeMachine/blob/main/images/demo.gif?raw=true)
 
 
 Unityのタイムライン状でPauseやRepeatといった複雑な操作を可能にするTimeline拡張です。  
