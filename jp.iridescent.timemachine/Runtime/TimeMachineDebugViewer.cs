@@ -13,6 +13,22 @@ using UnityEngine.UI;
 namespace Iridescent.TimeMachine
 {
     
+    public struct ClipButtonGUI
+    {
+        public TextMeshProUGUI textMeshProUGUI;
+        public Image progressBarBackground;
+        public Image progressBar;
+        public float previousProgressWidth;
+            
+        public ClipButtonGUI(TextMeshProUGUI textMeshProUGUI, Image progressBarBackground, Image progressBar)
+        {
+            this.textMeshProUGUI = textMeshProUGUI;
+            this.progressBarBackground = progressBarBackground;
+            this.progressBar = progressBar;
+            previousProgressWidth = 0;
+        }
+    }
+    
     [ExecuteAlways]
     public class TimeMachineDebugViewer : MonoBehaviour
     {
@@ -30,7 +46,7 @@ namespace Iridescent.TimeMachine
         private StringBuilder stringBuilder;
         private TimeMachineControlTrack timeMachineControlTrack = null;
         private TimelineAsset timelineAsset;
-        private Dictionary<TimelineClip,TextMeshProUGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, TextMeshProUGUI>();
+        private Dictionary<TimelineClip,ClipButtonGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, ClipButtonGUI>();
         [SerializeField] private List<RectTransform> buttonRectTransforms = new List<RectTransform>();
 
         private bool _isPause = false;
@@ -102,6 +118,7 @@ namespace Iridescent.TimeMachine
                 {
                     var button = Instantiate(buttonPrefab);
                     var textMesh =  button.GetComponentInChildren<TextMeshProUGUI>();
+                    
                     textMesh.text = GetClipButtonName(timelineClip);
                     button.onClick.AddListener(() =>
                     {
@@ -109,7 +126,11 @@ namespace Iridescent.TimeMachine
                         Debug.Log(asset.clipIndex);
                         timeMachineTrackManager.MoveClip(asset.clipIndex);
                     });
-                    clipButtonTextDictionary.Add(timelineClip,textMesh);
+                    var clipButtonGUI = new ClipButtonGUI();
+                    clipButtonGUI.textMeshProUGUI = textMesh;
+                    clipButtonGUI.progressBarBackground = button.transform.GetChild(0).GetComponent<Image>();
+                    clipButtonGUI.progressBar = clipButtonGUI.progressBarBackground.transform.GetChild(0).GetComponent<Image>();
+                    clipButtonTextDictionary.Add(timelineClip,clipButtonGUI);
                     button.transform.SetParent(clipButtonContainer);
                     button.transform.localScale = Vector3.one;
                     button.transform.localPosition = Vector3.zero;
@@ -162,9 +183,10 @@ namespace Iridescent.TimeMachine
 
         private void DestroyButtons()
         {
+            if(clipButtonContainer == null || clipButtonContainer.childCount == 0) return;
             for (int i =clipButtonContainer.childCount-1 ; i >= 0; i--)
             {
-                DestroyImmediate(clipButtonContainer.GetChild(i).gameObject);
+                if(clipButtonContainer.GetChild(i) != null && clipButtonContainer.GetChild(i).gameObject != null)DestroyImmediate(clipButtonContainer.GetChild(i).gameObject);
             }
             
             clipButtonTextDictionary.Clear();
@@ -199,13 +221,6 @@ namespace Iridescent.TimeMachine
       
             var fps = (float)timelineAsset.editorSettings.frameRate;
             var dateTime = TimeSpan.FromSeconds(timeMachineTrackManager.playableDirector.time);
-            // stringBuilder.Append($"[{timeMachineTrackManager.playableDirector.name}]  ");
-            // stringBuilder.Append($"{timeMachineTrackManager.playableDirector.state} ");
-            // stringBuilder.Append(dateTime.ToString(@"hh\:mm\:ss\:ff"));
-            // stringBuilder.Append(" ");
-            // stringBuilder.Append((Mathf.CeilToInt(fps * (float) timeMachineTrackManager.playableDirector.time)));
-            // stringBuilder.Append("f  ");
-            // stringBuilder.Append($"clip: {clipName}");
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
@@ -268,15 +283,27 @@ namespace Iridescent.TimeMachine
                 
                 if (clipTextPair.Key == currentClip)
                 {
-                    clipTextPair.Value.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.7f  + Mathf.Sin(Time.time*2)*0.3f);
-                    clipTextPair.Value.text =GetClipButtonName(clip);
+                    clipTextPair.Value.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
+                    clipTextPair.Value.textMeshProUGUI.text =GetClipButtonName(clip);
                         reachCurrentClip = true;
+                        
                 }
                 else
                 {
-                    clipTextPair.Value.color = reachCurrentClip ? defaultTextColor:finishTextColor;
-                    clipTextPair.Value.text = GetClipButtonName(clip);
+                    clipTextPair.Value.textMeshProUGUI.color = reachCurrentClip ? defaultTextColor:finishTextColor;
+                    clipTextPair.Value.textMeshProUGUI.text = GetClipButtonName(clip);
                 }
+                
+                var progress =Mathf.Clamp( (float)(timeMachineTrackManager.playableDirector.time - clip.start) / (float)(clip.end - clip.start),0f,1f);
+                var progressBarBackground = clipTextPair.Value.progressBarBackground;
+                var progressWidth = progressBarBackground.rectTransform.rect.width * (float)progress;
+                var progressBar = clipTextPair.Value.progressBar;
+                if(clipTextPair.Value.previousProgressWidth != progressWidth)
+                {
+                    clipTextPair.Value.progressBar.rectTransform.rect.Set(0,0,progressWidth,progressBar.rectTransform.rect.height);
+                    progressBar.rectTransform.sizeDelta = new Vector2(progressWidth, progressBar.rectTransform.sizeDelta.y);
+                }
+                
             }
 
 
