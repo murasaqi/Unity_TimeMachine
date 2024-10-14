@@ -7,6 +7,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
@@ -37,7 +38,7 @@ namespace Iridescent.TimeMachine
         // [SerializeField] public PlayableDirector timeline;
         [Header("TC Format [scene,state,tc,frame,clipName]")]
         [SerializeField] public string tcFormat = "scene,state,tc,frame,clipName";
-        [SerializeField] public TextMeshProUGUI textMeshProUGUI;
+        [FormerlySerializedAs("textMeshProUGUI")] [SerializeField] public TextMeshProUGUI timeMachineStatusText;
         [SerializeField] public RectTransform clipButtonContainer;
         [SerializeField] public Color finishTextColor = Color.gray;
         [SerializeField] public Color defaultTextColor = Color.white;
@@ -246,9 +247,9 @@ namespace Iridescent.TimeMachine
                 }
             }
             
-            if(textMeshProUGUI != null)
+            if(timeMachineStatusText != null)
             {
-                textMeshProUGUI.text = stringBuilder.ToString();
+                timeMachineStatusText.text = stringBuilder.ToString();
             }
 
         }
@@ -280,11 +281,11 @@ namespace Iridescent.TimeMachine
             {
                 var clip = clipTextPair.Key;
                 var asset = clip.asset as TimeMachineControlClip;
-                
+                var clipButtonGUI = clipTextPair.Value;
                 if (clipTextPair.Key == currentClip)
                 {
-                    clipTextPair.Value.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
-                    clipTextPair.Value.textMeshProUGUI.text =GetClipButtonName(clip);
+                    clipButtonGUI.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
+                    clipButtonGUI.textMeshProUGUI.text =GetClipButtonName(clip);
                         reachCurrentClip = true;
                         
                 }
@@ -298,32 +299,16 @@ namespace Iridescent.TimeMachine
                 var progressBarBackground = clipTextPair.Value.progressBarBackground;
                 var progressWidth = progressBarBackground.rectTransform.rect.width * (float)progress;
                 var progressBar = clipTextPair.Value.progressBar;
-                if(clipTextPair.Value.previousProgressWidth != progressWidth)
+
+                Debug.Log($"{asset.sectionName}, {progressBar.rectTransform.sizeDelta.x}, {progressWidth}");
+                if(progressBar.rectTransform.sizeDelta.x != progressWidth)
                 {
                     clipTextPair.Value.progressBar.rectTransform.rect.Set(0,0,progressWidth,progressBar.rectTransform.rect.height);
                     progressBar.rectTransform.sizeDelta = new Vector2(progressWidth, progressBar.rectTransform.sizeDelta.y);
                 }
-                
+
             }
-
-
-            // var buttonIndex = 0;
-            // foreach (var button in buttonRectTransforms)
-            // {
-            //     if (buttonIndex == timeMachineTrackManager.currentClipCount - 1 ||
-            //         buttonIndex == timeMachineTrackManager.currentClipCount ||
-            //         buttonIndex == timeMachineTrackManager.currentClipCount + 1)
-            //     {
-            //         button.gameObject.SetActive(true);
-            //     }
-            //     else
-            //     {
-            //         button.gameObject.SetActive(false);
-            //     }
-            //      
-            //     button.sizeDelta = clipButtonSize;
-            //     buttonIndex++;
-            // }
+            
             
         }
     }
