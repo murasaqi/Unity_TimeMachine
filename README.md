@@ -1,6 +1,12 @@
 # Unity_TimeMachine
 ![Overview](https://github.com/murasaqi/Unity_TimeMachine/blob/main/images/demo.gif?raw=true)
 
+> [!Note]
+> インストール用URLはこちら
+> ```
+> https://github.com/murasaqi/Unity_TimeMachine.git?path=/jp.iridescent.timemachine
+> ```
+> 
 
 Unityのタイムライン状でPauseやRepeatといった複雑な操作を可能にするTimeline拡張です。  
 
