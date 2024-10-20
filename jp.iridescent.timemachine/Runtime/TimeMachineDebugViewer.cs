@@ -212,6 +212,7 @@ namespace Iridescent.TimeMachine
 
         private void UpdateTC()
         {
+            if(timelineAsset == null) return;
             if(stringBuilder == null)
             {
                 stringBuilder = new StringBuilder();
@@ -257,7 +258,7 @@ namespace Iridescent.TimeMachine
         void Update()
         {
             
-            if(timeMachineTrackManager.playableDirector == null) return;
+            if(timeMachineTrackManager == null) return;
             
             if(timelineAsset == null) InitTrack();
             
