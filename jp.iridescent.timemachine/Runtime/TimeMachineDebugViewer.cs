@@ -300,7 +300,7 @@ namespace Iridescent.TimeMachine
                 var progressWidth = progressBarBackground.rectTransform.rect.width * (float)progress;
                 var progressBar = clipTextPair.Value.progressBar;
 
-                Debug.Log($"{asset.sectionName}, {progressBar.rectTransform.sizeDelta.x}, {progressWidth}");
+                // Debug.Log($"{asset.sectionName}, {progressBar.rectTransform.sizeDelta.x}, {progressWidth}");
                 if(progressBar.rectTransform.sizeDelta.x != progressWidth)
                 {
                     clipTextPair.Value.progressBar.rectTransform.rect.Set(0,0,progressWidth,progressBar.rectTransform.rect.height);
