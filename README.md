@@ -4,11 +4,11 @@
 > [!Note]
 > インストール用URLはこちら
 > ```
-> https://github.com/murasaqi/Unity_TimeMachine.git?path=/jp.iridescent.timemachine
+> https://github.com/murasaqi/Unity_TimeMachine.git?path=/jp.iridescent.timemachine#v1.0.0
 > ```
 > 
 
-Unityのタイムライン状でPauseやRepeatといった複雑な操作を可能にするTimeline拡張です。  
+Unityのタイムライン上でPauseやRepeatといった複雑な操作を可能にするTimeline拡張です。  
 
 ライブエンターテイメントやバーチャルプロダクションでの活用を想定しています。  
 
