@@ -51,6 +51,7 @@ public class TimeMachineOscReceiverEditor: Editor
             EditorGUILayout.Space();
             if (GUILayout.Button("Initialize OSC Events", GUILayout.MaxWidth(200),GUILayout.Height(28)))
             {
+                Undo.RecordObject(target, "Initialize TimeMachine OSC Event");
                 timeMachineOscReceiver.Init();
             }
             EditorGUILayout.Space();
