@@ -4,7 +4,7 @@
 > [!Note]
 > インストール用URLはこちら
 > ```
-> https://github.com/murasaqi/Unity_TimeMachine.git?path=/jp.iridescent.timemachine#v1.0.0
+> https://github.com/murasaqi/Unity_TimeMachine.git?path=/jp.iridescent.timemachine#v1.0.1
 > ```
 > 
 
