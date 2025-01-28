@@ -283,14 +283,13 @@ namespace Iridescent.TimeMachine
                 if (clipTextPair.Key == currentClip)
                 {
                     clipButtonGUI.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
-                    clipButtonGUI.textMeshProUGUI.text =GetClipButtonName(clip);
-                        reachCurrentClip = true;
-                        
+                    // clipButtonGUI.textMeshProUGUI.text =GetClipButtonName(clip);
+                    reachCurrentClip = true;
                 }
                 else
                 {
                     clipTextPair.Value.textMeshProUGUI.color = reachCurrentClip ? defaultTextColor:finishTextColor;
-                    clipTextPair.Value.textMeshProUGUI.text = GetClipButtonName(clip);
+                    // clipTextPair.Value.textMeshProUGUI.text = GetClipButtonName(clip);
                 }
                 
                 var progress =Mathf.Clamp( (float)(timeMachineTrackManager.playableDirector.time - clip.start) / (float)(clip.end - clip.start),0f,1f);
