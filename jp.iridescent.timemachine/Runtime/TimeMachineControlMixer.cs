@@ -86,8 +86,15 @@ namespace Iridescent.TimeMachine
 
                 if (timeMachineControlClip.isSyncClip)
                 {
-                    if (timeMachineControlClip.syncClip.asset != null &&
-                        syncClips.Find(c => c ==timeMachineControlClip.syncClip) == null)
+                    bool foundSyncCLip = false;
+                    foreach (var c in syncClips) 
+                        if(c == timeMachineControlClip.syncClip)
+                        {
+                            foundSyncCLip = true;
+                            break;
+                        }
+
+                    if (timeMachineControlClip.syncClip.asset != null && !foundSyncCLip)
                     {
                         clip.start = timeMachineControlClip.syncClip.start;
                         clip.duration = timeMachineControlClip.syncClip.duration;    
@@ -97,7 +104,6 @@ namespace Iridescent.TimeMachine
                     {
                         timeMachineControlClip.isSyncClip = false;
                     }
-                    
                 }
             }
 
