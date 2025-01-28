@@ -26,6 +26,8 @@ namespace Iridescent.TimeMachine
         public TimelineClip CurrentTimelineClip => currentTimelineClip;
         public TimeMachineTrackManager timeMachineTrackManager => trackBinding;
 
+        List<TimelineClip> syncClips = new();
+
         public override void OnPlayableCreate(Playable playable)
         {
             initialized = false;
@@ -66,7 +68,9 @@ namespace Iridescent.TimeMachine
 
 
 
-            var syncClips = new List<TimelineClip>();
+            syncClips ??= new List<TimelineClip>();
+            syncClips.Clear();
+            
             foreach (var clip in clips)
             {
          
