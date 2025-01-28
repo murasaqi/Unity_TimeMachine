@@ -50,6 +50,8 @@ namespace Iridescent.TimeMachine
         private Dictionary<TimelineClip,ClipButtonGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, ClipButtonGUI>();
         [SerializeField] private List<RectTransform> buttonRectTransforms = new List<RectTransform>();
 
+        string[] tcFormatArray = null;
+
         private bool _isPause = false;
 
         // Start is called before the first frame update
@@ -172,6 +174,8 @@ namespace Iridescent.TimeMachine
             pauseAndPlayButton.transform.SetParent(clipButtonContainer);
             buttonRectTransforms.Add(pauseAndPlayButton.GetComponent<RectTransform>());
             buttonRectTransforms.Last().sizeDelta = clipButtonSize;
+
+            tcFormatArray = tcFormat.Split();
         }
 
         private string GetClipButtonName(TimelineClip clip)
@@ -209,7 +213,6 @@ namespace Iridescent.TimeMachine
             DestroyButtons();
         }
 
-
         private void UpdateTC()
         {
             if(stringBuilder == null)
@@ -217,15 +220,14 @@ namespace Iridescent.TimeMachine
                 stringBuilder = new StringBuilder();
             }
 
-            var format = tcFormat.Split();
             stringBuilder.Clear();
-      
+            
             var fps = (float)timelineAsset.editorSettings.frameRate;
             var dateTime = TimeSpan.FromSeconds(timeMachineTrackManager.playableDirector.time);
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
-            foreach (var f in format)
+            foreach (var f in tcFormatArray)
             {
                 switch (f)
                 {
@@ -269,10 +271,6 @@ namespace Iridescent.TimeMachine
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             if(timeMachineControlClip == null) return;
-            
-            
-           
-            
          
             UpdateTC();
 
