@@ -26,7 +26,7 @@ namespace Iridescent.TimeMachine
         public TimelineClip CurrentTimelineClip => currentTimelineClip;
         public TimeMachineTrackManager timeMachineTrackManager => trackBinding;
 
-        List<TimelineClip> syncClips = new();
+        private List<TimelineClip> syncClips = new();
 
         public override void OnPlayableCreate(Playable playable)
         {
@@ -64,11 +64,8 @@ namespace Iridescent.TimeMachine
             }
 
             double time = playableDirector.time;
-         
 
 
-
-            syncClips ??= new List<TimelineClip>();
             syncClips.Clear();
             
             foreach (var clip in clips)
@@ -86,15 +83,15 @@ namespace Iridescent.TimeMachine
 
                 if (timeMachineControlClip.isSyncClip)
                 {
-                    bool foundSyncCLip = false;
+                    bool foundSyncClip = false;
                     foreach (var c in syncClips) 
                         if(c == timeMachineControlClip.syncClip)
                         {
-                            foundSyncCLip = true;
+                            foundSyncClip = true;
                             break;
                         }
 
-                    if (timeMachineControlClip.syncClip.asset != null && !foundSyncCLip)
+                    if (timeMachineControlClip.syncClip.asset != null && !foundSyncClip)
                     {
                         clip.start = timeMachineControlClip.syncClip.start;
                         clip.duration = timeMachineControlClip.syncClip.duration;    
@@ -137,7 +134,6 @@ namespace Iridescent.TimeMachine
                     timeMachineControlClip.isFireOnClipEnd = false;
                 }
             }
-            ;
 
             for (var i = 0; i < clips.Count; i++)
             {

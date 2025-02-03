@@ -50,11 +50,10 @@ namespace Iridescent.TimeMachine
         private Dictionary<TimelineClip,ClipButtonGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, ClipButtonGUI>();
         [SerializeField] private List<RectTransform> buttonRectTransforms = new List<RectTransform>();
 
-        string[] tcFormatArray = null;
+        private string[] tcFormatArray = null;
 
-        private bool _isPause = false;
+        private bool isPause = false;
 
-        // Start is called before the first frame update
         void Start()
         {
             Init();
@@ -98,7 +97,7 @@ namespace Iridescent.TimeMachine
             if(timeMachineTrackManager ==null) return;
             var buttonPrefab = Resources.Load<Button>("TimeMachinePrefab/TimeMachineClipButton");
             
-            
+
             
             var resetButton = Instantiate(buttonPrefab);
             var resetButtonTextMeshProUGUI =  resetButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -161,7 +160,7 @@ namespace Iridescent.TimeMachine
             pauseAndPlayButtonTextMeshProUGUI.text = "Pause and Play";
             pauseAndPlayButton.onClick.AddListener(() =>
             {
-                if (_isPause)
+                if (isPause)
                 {
                     timeMachineTrackManager.Play();
                 }
@@ -255,7 +254,7 @@ namespace Iridescent.TimeMachine
             }
 
         }
-        // Update is called once per frame
+        
         void Update()
         {
             
@@ -283,13 +282,11 @@ namespace Iridescent.TimeMachine
                 if (clipTextPair.Key == currentClip)
                 {
                     clipButtonGUI.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
-                    // clipButtonGUI.textMeshProUGUI.text =GetClipButtonName(clip);
                     reachCurrentClip = true;
                 }
                 else
                 {
                     clipTextPair.Value.textMeshProUGUI.color = reachCurrentClip ? defaultTextColor:finishTextColor;
-                    // clipTextPair.Value.textMeshProUGUI.text = GetClipButtonName(clip);
                 }
                 
                 var progress =Mathf.Clamp( (float)(timeMachineTrackManager.playableDirector.time - clip.start) / (float)(clip.end - clip.start),0f,1f);
