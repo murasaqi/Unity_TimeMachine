@@ -74,12 +74,43 @@ namespace Iridescent.TimeMachine
         
         public void MuteTimeMachineControlTrack()
         {
-            if (timeMachineControlTrack != null) timeMachineControlTrack.muted = false;
+            muteAllClip = true;
         }
         
         public void UnMuteTimeMachineControlTrack()
         {
-            if (timeMachineControlTrack != null) timeMachineControlTrack.muted = true;
+            muteAllClip = false;
+        }
+
+        public void UpdateClipsFinishStateByCurrentTime()
+        {
+            var currentTime = playableDirector.time;
+            
+            foreach (var clip in clips)
+            {
+                var timeMachineClip = clip.asset as TimeMachineControlClip;
+                
+                // 過去のクリップ（終了時刻が現在時刻以下）
+                if (clip.end <= currentTime)
+                {
+                    timeMachineClip.isFinishOnStart = true;
+                    timeMachineClip.isFinishOnEnd = true;
+                }
+                // 現在実行中のクリップ（開始時刻 <= 現在時刻 < 終了時刻）
+                else if (clip.start <= currentTime && currentTime < clip.end)
+                {
+                    // 現在時刻がクリップの開始時刻と同じかそれより後の場合
+                    // isFinishOnStartをtrueに設定
+                    timeMachineClip.isFinishOnStart = true;
+                    // isFinishOnEndはそのまま（変更しない）
+                }
+                // 未来のクリップ（開始時刻 > 現在時刻）
+                else
+                {
+                    timeMachineClip.isFinishOnStart = false;
+                    timeMachineClip.isFinishOnEnd = false;
+                }
+            }
         }
 
         private void OnValidate()

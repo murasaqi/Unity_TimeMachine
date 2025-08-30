@@ -190,6 +190,21 @@ public class TimeMachineOscReceiver : MonoBehaviour
             oscAddress = playerEventAddressPrefix+"/Stop",
             playerEvent = TimeMachinePlayerEventType.Stop,
         });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/MuteAllClip",
+            playerEvent = TimeMachinePlayerEventType.MuteAllClip,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/UnMuteAllClip",
+            playerEvent = TimeMachinePlayerEventType.UnMuteAllClip,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/UpdateClipsFinishStateByCurrentTime",
+            playerEvent = TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime,
+        });
         
         
         timeMachineOscMoveSectionEvents.Sort((a, b) => a.clipIndex.CompareTo(b.clipIndex));
@@ -268,6 +283,15 @@ public class TimeMachineOscReceiver : MonoBehaviour
                             break;
                         case TimeMachinePlayerEventType.Stop:
                             timeMachineTrackManager.Stop();
+                            break;
+                        case TimeMachinePlayerEventType.MuteAllClip:
+                            timeMachineTrackManager.MuteTimeMachineControlTrack();
+                            break;
+                        case TimeMachinePlayerEventType.UnMuteAllClip:
+                            timeMachineTrackManager.UnMuteTimeMachineControlTrack();
+                            break;
+                        case TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime:
+                            timeMachineTrackManager.UpdateClipsFinishStateByCurrentTime();
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -356,6 +380,15 @@ public class TimeMachineOscReceiver : MonoBehaviour
                     break;
                 case TimeMachinePlayerEventType.Stop:
                     timeMachineTrackManager.Stop();
+                    break;
+                case TimeMachinePlayerEventType.MuteAllClip:
+                    timeMachineTrackManager.MuteTimeMachineControlTrack();
+                    break;
+                case TimeMachinePlayerEventType.UnMuteAllClip:
+                    timeMachineTrackManager.UnMuteTimeMachineControlTrack();
+                    break;
+                case TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime:
+                    timeMachineTrackManager.UpdateClipsFinishStateByCurrentTime();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
