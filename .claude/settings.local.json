@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__find_symbol"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "unity-natural-mcp"
+  ]
+}
