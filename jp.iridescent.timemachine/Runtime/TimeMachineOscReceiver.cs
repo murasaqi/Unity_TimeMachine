@@ -37,6 +37,20 @@ public class TimeMachineOscReceiverEditor: Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("timeMachineTrackManager"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("globalPreWait"),new GUIContent("Global Pre Wait (sec)"));
+        
+        // OSCコマンド制御セクション
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("--- OSC Command Control ---", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("ignoreOscCommands"), new GUIContent("Ignore OSC Commands"));
+        
+        // フラグが有効な場合の警告表示
+        if (timeMachineOscReceiver.IsIgnoringOscCommands)
+        {
+            EditorGUILayout.HelpBox("OSC commands are currently being ignored. OSC messages will be received but TimeMachine operations will not be executed.", MessageType.Warning);
+        }
+        
+        EditorGUILayout.Space();
+        
         var isEnable =
 #if USE_UOSC
             timeMachineOscReceiver.uOscServer != null &&
@@ -84,6 +98,13 @@ public class TimeMachineOscReceiver : MonoBehaviour
     // [SerializeField] private float offsetTime = 0f;
     
     private Coroutine offsetDelayCoroutine;
+    
+    // OSCコマンドの実行を無視するフラグ
+    [SerializeField] private bool ignoreOscCommands = false;
+    
+    // フラグの状態を取得するプロパティ
+    public bool IsIgnoringOscCommands => ignoreOscCommands;
+    
 #if USE_UOSC
     public uOscServer uOscServer;
 #endif
@@ -107,6 +128,24 @@ public class TimeMachineOscReceiver : MonoBehaviour
     private void Start()
     {
         Bind();
+    }
+    
+    // OSCコマンドを有効化するメソッド
+    public void EnableOscCommands()
+    {
+        ignoreOscCommands = false;
+    }
+    
+    // OSCコマンドを無効化するメソッド
+    public void DisableOscCommands()
+    {
+        ignoreOscCommands = true;
+    }
+    
+    // OSCコマンドの有効/無効を設定するメソッド
+    public void SetOscCommandsEnabled(bool enabled)
+    {
+        ignoreOscCommands = !enabled;
     }
 
     [ContextMenu("Init")]
@@ -150,6 +189,21 @@ public class TimeMachineOscReceiver : MonoBehaviour
         {
             oscAddress = playerEventAddressPrefix+"/Stop",
             playerEvent = TimeMachinePlayerEventType.Stop,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/MuteAllClip",
+            playerEvent = TimeMachinePlayerEventType.MuteAllClip,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/UnMuteAllClip",
+            playerEvent = TimeMachinePlayerEventType.UnMuteAllClip,
+        });
+        timeMachineOscPlayerEvents.Add(new TimeMachineOscPlayerOscEvent()
+        {
+            oscAddress = playerEventAddressPrefix+"/UpdateClipsFinishStateByCurrentTime",
+            playerEvent = TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime,
         });
         
         
@@ -197,6 +251,9 @@ public class TimeMachineOscReceiver : MonoBehaviour
         {
             var bind = extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
+                // OSCコマンドを無視するフラグが有効な場合は処理をスキップ
+                if (ignoreOscCommands) return;
+                
                 if (timeMachineTrackManager != null)
                 {
                     var sectionName = timeMachineOscEvent.sectionName;
@@ -211,6 +268,9 @@ public class TimeMachineOscReceiver : MonoBehaviour
         {
             var bind = extOscReceiver.Bind(timeMachineOscEvent.oscAddress, (message) =>
             {
+                // OSCコマンドを無視するフラグが有効な場合は処理をスキップ
+                if (ignoreOscCommands) return;
+                
                 if (timeMachineTrackManager != null)
                 {
                     switch (timeMachineOscEvent.playerEvent)
@@ -223,6 +283,15 @@ public class TimeMachineOscReceiver : MonoBehaviour
                             break;
                         case TimeMachinePlayerEventType.Stop:
                             timeMachineTrackManager.Stop();
+                            break;
+                        case TimeMachinePlayerEventType.MuteAllClip:
+                            timeMachineTrackManager.MuteTimeMachineControlTrack();
+                            break;
+                        case TimeMachinePlayerEventType.UnMuteAllClip:
+                            timeMachineTrackManager.UnMuteTimeMachineControlTrack();
+                            break;
+                        case TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime:
+                            timeMachineTrackManager.UpdateClipsFinishStateByCurrentTime();
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -247,6 +316,8 @@ public class TimeMachineOscReceiver : MonoBehaviour
 
     public void OnMoveSectionReceived(Message message)
     {
+        // OSCコマンドを無視するフラグが有効な場合は処理をスキップ
+        if (ignoreOscCommands) return;
         
         foreach (var timeMachineOscEvent in timeMachineOscMoveSectionEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
         {
@@ -271,7 +342,11 @@ public class TimeMachineOscReceiver : MonoBehaviour
             {
                 offsetDelayCoroutine =  StartCoroutine(DelayMethod(coroutineTime, () =>
                 {
-                    timeMachineTrackManager.MoveClip(sectionName,0f);
+                    // 遅延実行時にもフラグを確認
+                    if (!ignoreOscCommands)
+                    {
+                        timeMachineTrackManager.MoveClip(sectionName,0f);
+                    }
                 }));
             }
             else if (coroutineTime == 0f)
@@ -290,6 +365,9 @@ public class TimeMachineOscReceiver : MonoBehaviour
     
     public void OnPlayerControlReceived(Message message)
     {
+        // OSCコマンドを無視するフラグが有効な場合は処理をスキップ
+        if (ignoreOscCommands) return;
+        
         foreach (var timeMachineOscEvent in timeMachineOscPlayerEvents.Where(timeMachineOscEvent => string.Equals(message.address, timeMachineOscEvent.oscAddress)))
         {
             switch (timeMachineOscEvent.playerEvent)
@@ -302,6 +380,15 @@ public class TimeMachineOscReceiver : MonoBehaviour
                     break;
                 case TimeMachinePlayerEventType.Stop:
                     timeMachineTrackManager.Stop();
+                    break;
+                case TimeMachinePlayerEventType.MuteAllClip:
+                    timeMachineTrackManager.MuteTimeMachineControlTrack();
+                    break;
+                case TimeMachinePlayerEventType.UnMuteAllClip:
+                    timeMachineTrackManager.UnMuteTimeMachineControlTrack();
+                    break;
+                case TimeMachinePlayerEventType.UpdateClipsFinishStateByCurrentTime:
+                    timeMachineTrackManager.UpdateClipsFinishStateByCurrentTime();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

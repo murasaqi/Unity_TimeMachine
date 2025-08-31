@@ -31,4 +31,7 @@ public enum TimeMachinePlayerEventType
     FinishCurrentRole,
     ResetAndReplay,
     Stop,
+    MuteAllClip,
+    UnMuteAllClip,
+    UpdateClipsFinishStateByCurrentTime,
 }

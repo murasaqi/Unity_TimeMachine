@@ -50,9 +50,10 @@ namespace Iridescent.TimeMachine
         private Dictionary<TimelineClip,ClipButtonGUI> clipButtonTextDictionary = new Dictionary<TimelineClip, ClipButtonGUI>();
         [SerializeField] private List<RectTransform> buttonRectTransforms = new List<RectTransform>();
 
-        private bool _isPause = false;
+        private string[] tcFormatArray = null;
 
-        // Start is called before the first frame update
+        private bool isPause = false;
+
         void Start()
         {
             Init();
@@ -96,7 +97,7 @@ namespace Iridescent.TimeMachine
             if(timeMachineTrackManager ==null) return;
             var buttonPrefab = Resources.Load<Button>("TimeMachinePrefab/TimeMachineClipButton");
             
-            
+
             
             var resetButton = Instantiate(buttonPrefab);
             var resetButtonTextMeshProUGUI =  resetButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -159,7 +160,7 @@ namespace Iridescent.TimeMachine
             pauseAndPlayButtonTextMeshProUGUI.text = "Pause and Play";
             pauseAndPlayButton.onClick.AddListener(() =>
             {
-                if (_isPause)
+                if (isPause)
                 {
                     timeMachineTrackManager.Play();
                 }
@@ -172,6 +173,8 @@ namespace Iridescent.TimeMachine
             pauseAndPlayButton.transform.SetParent(clipButtonContainer);
             buttonRectTransforms.Add(pauseAndPlayButton.GetComponent<RectTransform>());
             buttonRectTransforms.Last().sizeDelta = clipButtonSize;
+
+            tcFormatArray = tcFormat.Split();
         }
 
         private string GetClipButtonName(TimelineClip clip)
@@ -209,7 +212,6 @@ namespace Iridescent.TimeMachine
             DestroyButtons();
         }
 
-
         private void UpdateTC()
         {
             if(stringBuilder == null)
@@ -217,15 +219,14 @@ namespace Iridescent.TimeMachine
                 stringBuilder = new StringBuilder();
             }
 
-            var format = tcFormat.Split();
             stringBuilder.Clear();
-      
+            
             var fps = (float)timelineAsset.editorSettings.frameRate;
             var dateTime = TimeSpan.FromSeconds(timeMachineTrackManager.playableDirector.time);
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             var clipName = currentClip != null ? timeMachineControlClip.sectionName : "null";
-            foreach (var f in format)
+            foreach (var f in tcFormatArray)
             {
                 switch (f)
                 {
@@ -253,7 +254,7 @@ namespace Iridescent.TimeMachine
             }
 
         }
-        // Update is called once per frame
+        
         void Update()
         {
             
@@ -269,10 +270,6 @@ namespace Iridescent.TimeMachine
             var currentClip = timeMachineControlTrack.timeMachineControlMixer.CurrentTimelineClip;
             var timeMachineControlClip = currentClip.asset as TimeMachineControlClip;
             if(timeMachineControlClip == null) return;
-            
-            
-           
-            
          
             UpdateTC();
 
@@ -285,14 +282,11 @@ namespace Iridescent.TimeMachine
                 if (clipTextPair.Key == currentClip)
                 {
                     clipButtonGUI.textMeshProUGUI.color = new Color(activeTextColor.r,activeTextColor.g,activeTextColor.b,0.6f  + Mathf.Sin(Time.time*4)*0.4f);
-                    clipButtonGUI.textMeshProUGUI.text =GetClipButtonName(clip);
-                        reachCurrentClip = true;
-                        
+                    reachCurrentClip = true;
                 }
                 else
                 {
                     clipTextPair.Value.textMeshProUGUI.color = reachCurrentClip ? defaultTextColor:finishTextColor;
-                    clipTextPair.Value.textMeshProUGUI.text = GetClipButtonName(clip);
                 }
                 
                 var progress =Mathf.Clamp( (float)(timeMachineTrackManager.playableDirector.time - clip.start) / (float)(clip.end - clip.start),0f,1f);
