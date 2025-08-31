@@ -24,6 +24,11 @@
             "name": "com.hecomi.uosc",
             "expression": "",
             "define": "USE_UOSC"
+        },
+        {
+            "name": "jp.iridescent.ltcdecoder",
+            "expression": "",
+            "define": "USE_LTC_DECODER"
         }
     ],
     "noEngineReferences": false

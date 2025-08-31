@@ -3,7 +3,18 @@
     "allow": [
       "mcp__serena__search_for_pattern",
       "mcp__serena__find_symbol",
-      "mcp__serena__find_referencing_symbols"
+      "mcp__serena__find_referencing_symbols",
+      "mcp__serena__find_file",
+      "mcp__serena__list_dir",
+      "mcp__serena__get_symbols_overview",
+      "Read(F:\\works\\Unity_LTCDecoder\\jp.iridescent.ltcdecoder\\Runtime/**)",
+      "Read(F:\\works\\Unity_LTCDecoder\\jp.iridescent.ltcdecoder\\Runtime\\Scripts/**)",
+      "Read(F:\\works\\Unity_LTCDecoder\\jp.iridescent.ltcdecoder\\Runtime\\Scripts/**)",
+      "Read(F:\\works\\Unity_LTCDecoder\\jp.iridescent.ltcdecoder\\Runtime\\Scripts/**)",
+      "mcp__unity-natural-mcp__refresh_assets",
+      "mcp__unity-natural-mcp__get_compile_logs",
+      "Read(F:\\works\\Unity_LTCDecoder\\jp.iridescent.ltcdecoder\\Runtime\\Scripts/**)",
+      "mcp__unity-natural-mcp__get_current_console_logs"
     ]
   },
   "enableAllProjectMcpServers": true,
