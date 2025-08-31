@@ -215,14 +215,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "jp.iridescent.ltcdecoder": {
-      "version": "file:F:/works/Unity_LTCDecoder/jp.iridescent.ltcdecoder",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.timeline": "1.6.0"
-      }
-    },
     "jp.iridescent.timemachine": {
       "version": "file:../../jp.iridescent.timemachine",
       "depth": 0,
